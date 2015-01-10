@@ -1,0 +1,33 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#e5e5e5"
+    android:orientation="vertical"
+    tools:context="hackthedrive.bmw.de.hackthedrive.MenuActivity">
+
+    <include layout="@layout/toolbar_actionbar_with_headerbar" />
+
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/activity_example_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/activity_example_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ListView
+            android:id="@+id/activity_example_drawer"
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:choiceMode="singleChoice"
+            android:drawSelectorOnTop="true"
+            android:fastScrollEnabled="false"
+            android:listSelector="@drawable/selector_clickable_item_bg"
+            android:background="#ffffff" />
+    </android.support.v4.widget.DrawerLayout>
+
+</LinearLayout>

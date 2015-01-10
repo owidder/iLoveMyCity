@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">HackTheDrive</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_welcome">WelcomeActivity</string>
+    <string name="title_activity_list">ListActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_menu">MenuActivity</string>
+    <string name="title_activity_panels">Panels</string>
+    <string name="rest_activity">Rest</string>
+
+    <string name="drawer_open">Open menu</string>
+    <string name="drawer_close">Close menu</string>
+    <string name="eventUrl">http://data.api.hackthedrive.com/v1/Events</string>
+    <string name="mojioAPIToken">e2494d31-223d-4022-b27c-2794136abf4c</string>
+    <string name="title_navigation">Navigation</string>
+</resources>
