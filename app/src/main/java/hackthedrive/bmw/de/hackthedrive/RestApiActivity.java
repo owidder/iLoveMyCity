@@ -9,11 +9,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import hackthedrive.bmw.de.hackthedrive.util.CarDataUtil;
-import hackthedrive.bmw.de.hackthedrive.util.GsonDeserializer;
-import hackthedrive.bmw.de.hackthedrive.util.GsonSerializer;
+import hackthedrive.bmw.de.hackthedrive.domain.Vehicle;
+import hackthedrive.bmw.de.hackthedrive.service.VehicleService;
 import hackthedrive.bmw.de.hackthedrive.util.LogUtil;
-import hackthedrive.bmw.de.hackthedrive.util.RestClient;
 
 public class RestApiActivity extends BaseActivity {
     private static final LogUtil logger = LogUtil.getLogger(RestApiActivity.class);
@@ -30,47 +28,22 @@ public class RestApiActivity extends BaseActivity {
 
         setupToolbar();
 
-        CarDataUtil carDataUtil = new CarDataUtil();
-        carDataUtil.pollCarData(RestApiActivity.this, mainTextView);
-
-/*
         new AsyncTask<Void, Void, Void>(){
             private TestData data;
 
             @Override
             protected Void doInBackground(Void... params) {
-                try {
-                    // TODO: set your local ip HERE
-                    RestClient client = new RestClient("http://192.168.3.71:8080/app/rest/testdata");
-                    client.Execute(RestClient.RequestMethod.GET);
+                VehicleService vehicleService = new VehicleService(RestApiActivity.this);
+                Vehicle vehicle = vehicleService.getCurrentVehicle();
 
-
-                    String response = client.getResponse();
-                    logger.d("REST answer: %s", response);
-
-                    data = GsonDeserializer.deserialize(response, TestData.class);
-                } catch (Exception e) {
-                    logger.e(e, "Error retrieving data");
-                }
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-
-                if( data == null ){
-                    mainTextView.setText("Error getting data");
-                    logger.e("Error retrieving data");
-                    return;
-                }
-
-                String result = data.getTestMessage() + " - " + data.getTestNumber() + "\n\n";
-                result += GsonSerializer.serialize(data);
-                mainTextView.setText(result);
             }
         }.execute();
-*/
     }
 
     private void setupToolbar() {
