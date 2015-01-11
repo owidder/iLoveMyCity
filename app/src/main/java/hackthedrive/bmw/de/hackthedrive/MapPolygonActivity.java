@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import hackthedrive.bmw.de.hackthedrive.activity.WelcomeActivity;
+import hackthedrive.bmw.de.hackthedrive.util.LocationUtil;
 
 public class MapPolygonActivity extends BaseMapActivity {
     private static final LatLng SYDNEY = new LatLng(-33.87365, 151.20689);
@@ -63,10 +64,6 @@ public class MapPolygonActivity extends BaseMapActivity {
      * Creates a List of LatLngs that form a rectangle with the given dimensions.
      */
     private List<LatLng> createRectangle(LatLng center, double halfWidth, double halfHeight) {
-        return Arrays.asList(new LatLng(center.latitude - halfHeight, center.longitude - halfWidth),
-                new LatLng(center.latitude - halfHeight, center.longitude + halfWidth),
-                new LatLng(center.latitude + halfHeight, center.longitude + halfWidth),
-                new LatLng(center.latitude + halfHeight, center.longitude - halfWidth),
-                new LatLng(center.latitude - halfHeight, center.longitude - halfWidth));
+        return LocationUtil.createRectangle(center, halfWidth, halfHeight);
     }
 }

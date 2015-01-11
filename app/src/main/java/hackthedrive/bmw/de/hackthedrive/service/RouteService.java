@@ -4,9 +4,9 @@ import android.location.Location;
 
 import java.util.List;
 
-import hackthedrive.bmw.de.hackthedrive.adapter.DbHelper;
 import hackthedrive.bmw.de.hackthedrive.adapter.RouteDataSource;
 import hackthedrive.bmw.de.hackthedrive.domain.Route;
+import hackthedrive.bmw.de.hackthedrive.domain.Vehicle;
 import hackthedrive.bmw.de.hackthedrive.util.GsonSerializer;
 import hackthedrive.bmw.de.hackthedrive.util.LogUtil;
 import hackthedrive.bmw.de.hackthedrive.util.RestClient;
@@ -46,5 +46,22 @@ public class RouteService {
         } catch (Exception e) {
             logger.e(e, "Route could not be saved. %s", e.getMessage());
         }
+    }
+
+    public void startRoute(Route route, VehicleServiceAsyncWrapper vehicleService){
+        //
+        Vehicle currentVehicle = vehicleService.getLastVehicle();
+        if(currentVehicle != null) {
+            Double fuelLevel = currentVehicle.getBatteryLevel();
+            routeDs.startNewRoute(currentVehicle.getLat(), currentVehicle.getLng(), currentVehicle.getBatteryLevel(), fuelLevel, route.getId());
+        } else {
+            routeDs.startNewRoute(0.0, 0.0, 0.0, 0.0, route.getId());
+        }
+    }
+
+    public void finishRoute(VehicleService vehicleService){
+        Vehicle currentVehicle = vehicleService.getCurrentVehicle();
+        Double fuelLevel = currentVehicle.getBatteryLevel();
+        routeDs.endRoute(currentVehicle.getBatteryLevel(), fuelLevel);
     }
 }

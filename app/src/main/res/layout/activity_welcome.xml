@@ -12,18 +12,18 @@
         android:layout_weight="1"
         android:background="#e5e5e5">
 
-            <!-- Logo -->
-            <ImageView
-                android:src="@drawable/car"
-                android:layout_marginTop="5dp"
-                android:layout_width="144dp"
-                android:layout_height="144dp"
-                android:scaleType="fitCenter"
-                android:tint="#7000"
-                android:layout_gravity="center|top" />
+        <!-- Logo -->
+        <ImageView
+            android:src="@drawable/ilmc200"
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            android:tint="#7000"
+            android:layout_gravity="center|top" />
 
 
-            <!-- Welcome Message -->
+        <!-- Welcome Message -->
 
         <ScrollView
             android:layout_width="match_parent"
@@ -35,7 +35,7 @@
                 android:paddingBottom="16dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:paddingTop="180dp"
+                android:paddingTop="280dp"
                 android:clipToPadding="false">
 
                 <android.support.v7.widget.CardView
@@ -50,15 +50,24 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:padding="24dp">
+                        android:padding="20dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@string/font_fontFamily_medium"
-                            android:text="Welcome to RouteNow"
+                            android:text="I Love My City"
                             android:textColor="@color/theme_primary"
                             android:textSize="@dimen/text_size_xlarge"
+                            android:textStyle="@integer/font_textStyle_medium" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@string/font_fontFamily_medium"
+                            android:text="I Love My Car"
+                            android:textColor="@color/theme_primary"
+                            android:textSize="@dimen/text_size_medium"
                             android:textStyle="@integer/font_textStyle_medium" />
 
                         <TextView
@@ -66,7 +75,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
                             android:autoLink="web"
-                            android:text="The greatest app for creating, using and rating routes all over the world..."
+                            android:text="Show your city to the world by sharing great tours in an awesome car!"
                             android:textColor="@color/body_text_2"
                             android:textSize="@dimen/text_size_medium" />
 
@@ -78,10 +87,10 @@
 
     </FrameLayout>
 
-        <!-- Buttons -->
+    <!-- Buttons -->
     <LinearLayout
         android:layout_height="wrap_content"
-        android:background="#3f51b5"
+        android:background="@color/theme_primary"
         android:layout_gravity="bottom"
         android:layout_width="match_parent"
         android:orientation="vertical">
@@ -90,7 +99,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="?attr/selectableItemBackground"
-            android:text="Create new route by driving"
+            android:text="Create tour (via car)"
             android:textSize="@dimen/text_size_medium"
             android:textStyle="@integer/font_textStyle_medium"
             android:fontFamily="@string/font_fontFamily_medium"
@@ -103,7 +112,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="?attr/selectableItemBackground"
-            android:text="Create new route (via POIs)"
+            android:text="Create tour (via POI)"
             android:textSize="@dimen/text_size_medium"
             android:textStyle="@integer/font_textStyle_medium"
             android:fontFamily="@string/font_fontFamily_medium"
@@ -116,7 +125,7 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:background="?attr/selectableItemBackground"
-            android:text="Use existing route"
+            android:text="Explore"
             android:textSize="@dimen/text_size_medium"
             android:textStyle="@integer/font_textStyle_medium"
             android:fontFamily="@string/font_fontFamily_medium"

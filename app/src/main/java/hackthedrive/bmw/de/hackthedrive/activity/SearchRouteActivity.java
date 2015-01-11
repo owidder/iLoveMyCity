@@ -21,6 +21,7 @@ import hackthedrive.bmw.de.hackthedrive.domain.Route;
 import hackthedrive.bmw.de.hackthedrive.factory.TestDataFactory;
 import hackthedrive.bmw.de.hackthedrive.service.RouteService;
 import hackthedrive.bmw.de.hackthedrive.util.GsonSerializer;
+import hackthedrive.bmw.de.hackthedrive.util.LocationUtil;
 import hackthedrive.bmw.de.hackthedrive.util.LogUtil;
 
 
@@ -45,7 +46,7 @@ public class SearchRouteActivity extends BaseActivity {
 
     private void setupToolbar() {
         Toolbar toolbar = getActionBarToolbar();
-        toolbar.setTitle("Search for routes");
+        toolbar.setTitle("Explore Tours");
         toolbar.setNavigationIcon(R.drawable.ic_up);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,13 +65,19 @@ public class SearchRouteActivity extends BaseActivity {
 
             @Override
             protected Void doInBackground(Void... params) {
+                logger.i("Start loading routes");
                 list = TestDataFactory.createTestRoutes(getApplicationContext());
+                logger.i("Added test routes");
                 try {
                     List<Route> localRoutes = routeService.getAllRoutes();
                     logger.d("Adding %s local routes.", localRoutes.size());
                     for (Route route : localRoutes) {
+                        // get start address: HACK just for NOW
+                        route.setStartAddress(LocationUtil.geocodeLocation(getApplicationContext(), LocationUtil.toLatLng(route.getStart())));
+                        route.setEndAddress(LocationUtil.geocodeLocation(getApplicationContext(), LocationUtil.toLatLng(route.getStart())));
                         list.add(route);
                     }
+                    logger.i("Added db routes");
                 } catch (Exception ex){
                     logger.e(ex,"Error loading routes: %s", ex.getMessage());
                 }

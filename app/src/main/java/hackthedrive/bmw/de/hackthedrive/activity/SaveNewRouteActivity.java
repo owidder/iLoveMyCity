@@ -14,6 +14,7 @@ import hackthedrive.bmw.de.hackthedrive.BaseActivity;
 import hackthedrive.bmw.de.hackthedrive.R;
 import hackthedrive.bmw.de.hackthedrive.domain.Route;
 import hackthedrive.bmw.de.hackthedrive.service.RouteService;
+import hackthedrive.bmw.de.hackthedrive.util.GsonDeserializer;
 import hackthedrive.bmw.de.hackthedrive.util.LogUtil;
 
 /**
@@ -34,7 +35,7 @@ public class SaveNewRouteActivity extends BaseActivity {
         super.onCreate(bundle);
         setContentView(R.layout.activity_save_new_route);
         Bundle b = getIntent().getExtras();
-        route = (Route) b.getSerializable("route");
+        route = GsonDeserializer.deserialize(b.getString("route"), Route.class);
         routeService = new RouteService();
 
         setupToolbar();

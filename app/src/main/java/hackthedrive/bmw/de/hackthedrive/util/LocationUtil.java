@@ -8,6 +8,8 @@ import android.location.Location;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -116,4 +118,34 @@ public final class LocationUtil {
         return getDistanceOfLocationFromPolygon(loc, area.getLocations()) < 1D;
     }
 
+    public static boolean isInArea(final Location loc, List<Location> area) {
+        return getDistanceOfLocationFromPolygon(loc, area) < 1D;
+    }
+
+    public static List<LatLng> createRectangle(LatLng center, double halfWidth, double halfHeight) {
+        return Arrays.asList(new LatLng(center.latitude - halfHeight, center.longitude - halfWidth),
+                new LatLng(center.latitude - halfHeight, center.longitude + halfWidth),
+                new LatLng(center.latitude + halfHeight, center.longitude + halfWidth),
+                new LatLng(center.latitude + halfHeight, center.longitude - halfWidth),
+                new LatLng(center.latitude - halfHeight, center.longitude - halfWidth));
+    }
+
+
+    public static Location latLng2Location(LatLng latLng) {
+        Location location = new Location("");
+        location.setLatitude(latLng.latitude);
+        location.setLongitude(latLng.longitude);
+        return location;
+    }
+
+    public static List<Location> listOfLatLng2listLOfLocation(List<LatLng> listOfLatLng) {
+        List<Location> listOfLocation = new ArrayList<>();
+
+        for (LatLng latLng : listOfLatLng) {
+            Location location = LocationUtil.latLng2Location(latLng);
+            listOfLocation.add(location);
+        }
+
+        return listOfLocation;
+    }
 }

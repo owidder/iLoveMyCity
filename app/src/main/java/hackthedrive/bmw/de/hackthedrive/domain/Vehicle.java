@@ -8,6 +8,26 @@ public class Vehicle {
     private Double lng;
     private Double heading;
 
+    public Boolean getIgnitionOn() {
+        return ignitionOn;
+    }
+
+    public void setIgnitionOn(Boolean ignitionOn) {
+        this.ignitionOn = ignitionOn;
+    }
+
+    private Boolean ignitionOn;
+
+    public String getVin() {
+        return vin;
+    }
+
+    public void setVin(String vin) {
+        this.vin = vin;
+    }
+
+    private String vin;
+
     public Double getBatteryLevel() {
         return batteryLevel;
     }

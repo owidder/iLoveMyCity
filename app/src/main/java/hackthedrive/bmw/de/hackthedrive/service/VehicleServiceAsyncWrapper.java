@@ -1,11 +1,13 @@
 package hackthedrive.bmw.de.hackthedrive.service;
 
 import android.content.Context;
+import android.location.Location;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import hackthedrive.bmw.de.hackthedrive.domain.Vehicle;
+import hackthedrive.bmw.de.hackthedrive.util.LocationUtil;
 
 /**
  * Created by ewa on 10.01.2015.
@@ -52,6 +54,17 @@ public class VehicleServiceAsyncWrapper {
         updateThread = null;
     }
 
+    public synchronized Location getCurrentLocation(){
+        if( getLastVehicle() != null ){
+            return LocationUtil.createLocation(getLastVehicle().getLat(), getLastVehicle().getLng());
+        }
+
+        return vehicleService.getCurrentLocation();
+    }
+    public synchronized Vehicle getLastVehicle(){
+        return currentVehicle;
+    }
+
     public synchronized void addListener(VehicleDataListener listener){
         if( listeners.size() == 0 ){
             start();
@@ -96,6 +109,7 @@ public class VehicleServiceAsyncWrapper {
                         listener.onVehicleDataChanged(currentVehicle);
                     }
                     DriveInService.getInstance(context).processLocationChange(currentVehicle);
+                    ActiveRouteService.getInstance(context).processDataChange(currentVehicle);
                 }
 
                 try {

@@ -4,66 +4,105 @@
     android:layout_height="match_parent"
     android:background="#e5e5e5"
     android:orientation="vertical"
-    tools:context="hackthedrive.bmw.de.hackthedrive.activity.SaveNewRouteActivity"
-    android:weightSum="1">
+    android:weightSum="1"
+    xmlns:iosched="http://schemas.android.com/apk/res-auto"
+    tools:context="hackthedrive.bmw.de.hackthedrive.activity.SaveNewRouteActivity">
 
     <include layout="@layout/toolbar_actionbar_with_headerbar" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Name"
-        android:id="@+id/textView2"
-        android:autoText="false" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/editTextName"
-        android:layout_gravity="center_horizontal" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Description"
-        android:id="@+id/textDescription" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:id="@+id/editTextDescr"
-        android:layout_weight="0.23" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Image"
-        android:onClick="onClickAddImage"
-        android:id="@+id/addImageButton" />
-
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save"
-        android:onClick="onClickSave"
-        android:id="@+id/buttonSave"
-        android:layout_gravity="right" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Dismiss"
-        android:id="@+id/buttonDismiss" />
 
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            iosched:cardBackgroundColor="#fff"
+            iosched:cardCornerRadius="@dimen/card_corner_radius"
+            iosched:cardElevation="@dimen/card_elevation"
+            iosched:cardPreventCornerOverlap="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <ImageButton
+                    android:id="@+id/addImageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="onClickAddImage"
+                    android:text="Add Image"
+                    android:background="@null"
+                    android:src="@drawable/polaroidcamera64"/>
+
+                <ImageButton
+                    android:id="@+id/shareButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:onClick="onClickAddImage"
+                    android:text="Add Image"
+                    android:background="@null"
+                    android:src="@drawable/upload64"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal|right"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/buttonDismiss"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dismiss"
+                        android:background="@null"
+                        android:src="@drawable/denied64"/>
+                    <ImageButton
+                        android:id="@+id/buttonSave"
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="onClickSave"
+                        android:text="Save"
+                        android:background="@null"
+                        android:src="@drawable/check64"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoText="false"
+            android:text="Name" />
+
+        <EditText
+            android:id="@+id/editTextName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/textDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Description" />
+
+        <EditText
+            android:id="@+id/editTextDescr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="3"
+            android:inputType="textMultiLine" />
     </LinearLayout>
-
-
-
 </LinearLayout>

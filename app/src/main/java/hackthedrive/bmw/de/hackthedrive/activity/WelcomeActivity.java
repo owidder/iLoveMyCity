@@ -5,10 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import hackthedrive.bmw.de.hackthedrive.BaseActivity;
 import hackthedrive.bmw.de.hackthedrive.ListActivity;
 import hackthedrive.bmw.de.hackthedrive.R;
+import hackthedrive.bmw.de.hackthedrive.domain.Route;
+import hackthedrive.bmw.de.hackthedrive.util.GsonSerializer;
 
-public class WelcomeActivity extends Activity {
+public class WelcomeActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

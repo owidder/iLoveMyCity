@@ -76,8 +76,14 @@ public class LocationMockService {
             startBatteryLevel = data.getBatteryLevel();
         }
         else {
-            currentBatteryDrain = startBatteryLevel - data.getBatteryLevel();
+            if( data.getBatteryLevel() != null && startBatteryLevel != null ) {
+                currentBatteryDrain = startBatteryLevel - data.getBatteryLevel();
+            }
         }
+    }
+
+    private void computeAvgSpeed(Vehicle data) {
+
     }
 
     public void pushLocation(Location loc){

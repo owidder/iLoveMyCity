@@ -34,7 +34,7 @@
             android:textSize="20sp"
             android:layout_alignParentLeft="true"
             android:background="@null"
-            android:src="@drawable/record100"/>
+            android:src="@drawable/car2"/>
 
         <ImageButton
             android:id="@+id/stopRecordingButton"
@@ -48,7 +48,7 @@
             android:textColor="#000"
             android:textSize="20sp"
             android:background="@null"
-            android:src="@drawable/stop100"/>
+            android:src="@drawable/power"/>
 
         <ImageButton
             android:id="@+id/addPoiButton"
@@ -58,7 +58,7 @@
             android:visibility="invisible"
             android:onClick="onClickAddPoi"
             android:background="@null"
-            android:src="@drawable/addpoi100"/>
+            android:src="@drawable/camera"/>
 
         <ImageButton
             android:id="@+id/addViaPointButton"
@@ -68,7 +68,7 @@
             android:visibility="invisible"
             android:onClick="onClickAddViaPoint"
             android:background="@null"
-            android:src="@drawable/addvia100"/>
+            android:src="@drawable/flag2"/>
 
     </LinearLayout>
     </fragment>

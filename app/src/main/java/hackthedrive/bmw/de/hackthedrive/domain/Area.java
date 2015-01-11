@@ -18,6 +18,19 @@ public class Area {
         OUTSIDE
     }
 
+    public Location getViaPoint() {
+        return viaPoint;
+    }
+
+    public void setViaPoint(Location viaPoint) {
+        this.viaPoint = viaPoint;
+    }
+
+    /**
+     * Only set if the area is around a Via Point
+     */
+    private Location viaPoint = null;
+
     private List<Location> locations;
     private String text;
     private AreaState state = AreaState.OUTSIDE;

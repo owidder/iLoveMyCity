@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.SeekBar;
@@ -14,6 +15,8 @@ import hackthedrive.bmw.de.hackthedrive.BaseActivity;
 import hackthedrive.bmw.de.hackthedrive.R;
 import hackthedrive.bmw.de.hackthedrive.domain.Poi;
 import hackthedrive.bmw.de.hackthedrive.service.VehicleService;
+import hackthedrive.bmw.de.hackthedrive.service.VehicleServiceAsyncWrapper;
+import hackthedrive.bmw.de.hackthedrive.util.GsonSerializer;
 import hackthedrive.bmw.de.hackthedrive.util.LogUtil;
 
 /**
@@ -32,12 +35,18 @@ public class AddPoiActivity extends BaseActivity {
         super.onCreate(bundle);
         setContentView(R.layout.activity_add_new_poi);
         poi = new Poi();
+        setupToolbar();
+    }
+
+    private void setupToolbar() {
+        Toolbar toolbar = getActionBarToolbar();
+        toolbar.setTitle("Add Poi");
     }
 
     public void onClickSave(View v){
         fillPoi();
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("poi",poi);
+        returnIntent.putExtra("poi", GsonSerializer.serialize(poi));
         setResult(RESULT_OK,returnIntent);
         finish();
     }
@@ -58,9 +67,7 @@ public class AddPoiActivity extends BaseActivity {
         logger.d("Range: %s", rangeBar.getProgress());
 
         poi.setRadius(rangeBar.getProgress());
-
-        VehicleService vehicleService = new VehicleService(getApplication());
-        poi.setLocation(vehicleService.getCurrentLocation());
+        poi.setLocation(VehicleServiceAsyncWrapper.instance(getApplicationContext()).getCurrentLocation());
     }
 
     public void onClickAddImage(View v){
@@ -87,7 +94,7 @@ public class AddPoiActivity extends BaseActivity {
             //ImageView imageView = (ImageView) findViewById(R.id.imageView1);
             //imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
             logger.d("Adding image to route: %s", picturePath.toString());
-            poi.addImage(BitmapFactory.decodeFile(picturePath));
+            //poi.addImage(BitmapFactory.decodeFile(picturePath));
         }
     }
 }

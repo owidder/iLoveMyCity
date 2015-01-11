@@ -2,7 +2,6 @@ package hackthedrive.bmw.de.hackthedrive.service;
 
 import android.location.Location;
 
-import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -29,16 +28,17 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathFactory;
 
-import hackthedrive.bmw.de.hackthedrive.R;
+import hackthedrive.bmw.de.hackthedrive.domain.FuelStation;
+import hackthedrive.bmw.de.hackthedrive.domain.Route;
 import hackthedrive.bmw.de.hackthedrive.util.LocationUtil;
 import hackthedrive.bmw.de.hackthedrive.util.LogUtil;
-import hackthedrive.bmw.de.hackthedrive.util.RestClient;
 
 /**
  * Created by dst on 11.01.2015.
  */
 public class FuelStationService {
     private static final LogUtil logger = LogUtil.getLogger(FuelStationService.class);
+    private static final int RANGE = 10;
     public static final String USER = "b207195d0b1684270db5aeae7970408c5179ce9f5a4dc1366937247";
     public static final String PASS = "167fb3e18980d8622f6a19fbbda3e01d";
     public static final String WS_URL = "https://webservices.chargepoint.com/webservices/chargepoint/services/4.1";
@@ -66,11 +66,11 @@ public class FuelStationService {
             "  </soap:Envelope>\n";
 
 
-    public List<Location> getChargingStations(Location center){
-        List<Location> chargingStations = new ArrayList<>();
+    public List<FuelStation> getChargingStations(Location center){
+        List<FuelStation> chargingStations = new ArrayList<>();
         try {
-            String xml = getData(center, 10);
-            logger.d("Charing stations: %s", xml);
+            String xml = getData(center, RANGE);
+            logger.d("Charging station response: %s", xml);
 
             DocumentBuilderFactory builderFactory =
                     DocumentBuilderFactory.newInstance();
@@ -79,25 +79,32 @@ public class FuelStationService {
                 builder = builderFactory.newDocumentBuilder();
                 Document xmlDocument = builder.parse(new ByteArrayInputStream(xml.getBytes()));
                 XPath xPath =  XPathFactory.newInstance().newXPath();
-                String expression = "/stationData";
+                String expression = "//stationData/Port/Geo";
                 // String email = xPath.compile(expression).evaluate(xmlDocument);
                 // Node node = (Node) xPath.compile(expression).evaluate(xmlDocument, XPathConstants.NODE);
                 NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(xmlDocument, XPathConstants.NODESET);
+                logger.i("Found %s station nodes.", nodeList.getLength());
                 for(int i=0; i<nodeList.getLength(); i++){
                     Node node = nodeList.item(i);
-                    NodeList stationData = node.getChildNodes();
-                    Double lat = null;
-                    Double lon = null;
-                    for(int j=0; j<stationData.getLength(); j++) {
-                        Node nodeInside = stationData.item(i);
-                        if(nodeInside.getNodeName().equals("Lat")){
-                            lat = Double.valueOf(nodeInside.getNodeValue());
-                        } else if(nodeInside.getNodeName().equals("Long")){
-                            lon = Double.valueOf(nodeInside.getNodeValue());
+                    if(node !=null) {
+                        logger.d("Parse node. %s", i);
+                        NodeList stationData = node.getChildNodes();
+                        Double lat = null;
+                        Double lon = null;
+                        for (int j = 0; j < stationData.getLength(); j++) {
+                            Node nodeInside = stationData.item(j);
+                            String nodeName = getNodeName(nodeInside);
+                            logger.d("Node: %s - Value: %s", nodeName, getValueFromChild(nodeInside));
+                            if (nodeName.equals("Lat")) {
+                                lat = Double.valueOf(nodeInside.getFirstChild().getNodeValue());
+                            } else if (nodeName.equals("Long")) {
+                                lon = Double.valueOf(nodeInside.getFirstChild().getNodeValue());
+                            }
                         }
-                    }
-                    if(lat != null && lon != null){
-                        chargingStations.add(LocationUtil.createLocation(lat, lon));
+                        if (lat != null && lon != null) {
+                            logger.d("Adding station data: %s,%s", lat, lon);
+                            chargingStations.add(new FuelStation(LocationUtil.createLocation(lat, lon)));
+                        }
                     }
                 }
             } catch (ParserConfigurationException |SAXException | XPathException e){
@@ -105,9 +112,24 @@ public class FuelStationService {
             }
 
         } catch (IOException e) {
-            logger.w(e,"Charing stations could not be fetched. %s", e.getMessage());
+            logger.w(e,"Charging stations could not be fetched. %s", e.getMessage());
         }
+        logger.i("Found %s stations", chargingStations.size());
         return chargingStations;
+    }
+
+    private String getValueFromChild(Node node){
+        if(node != null && node.getFirstChild() != null){
+            return node.getFirstChild().getNodeValue();
+        }
+        return "";
+    }
+
+    private String getNodeName(Node node){
+        if(node != null){
+            return node.getNodeName();
+        }
+        return "";
     }
 
     public static String getData(Location center, long proximity) throws MalformedURLException, IOException {
@@ -154,5 +176,10 @@ public class FuelStationService {
             outputString = outputString + responseString;
         }
         return outputString;
+    }
+
+    public Route addChargingStations(Route route) {
+        route.setFuelStatios(this.getChargingStations(route.getStart()));
+        return route;
     }
 }

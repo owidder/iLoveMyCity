@@ -4,11 +4,65 @@
     android:layout_height="match_parent"
     android:background="#e5e5e5"
     android:orientation="vertical"
+    xmlns:iosched="http://schemas.android.com/apk/res-auto"
     tools:context="hackthedrive.bmw.de.hackthedrive.activity.SaveNewRouteActivity"
     android:weightSum="1">
 
     <include layout="@layout/toolbar_actionbar_with_headerbar" />
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            iosched:cardBackgroundColor="#fff"
+            iosched:cardCornerRadius="@dimen/card_corner_radius"
+            iosched:cardElevation="@dimen/card_elevation"
+            iosched:cardPreventCornerOverlap="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <Button
+                    android:id="@+id/addImageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="onClickAddImage"
+                    android:text="Add Image" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal|right"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/buttonDismiss"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="onClickDismiss"
+                        android:text="Dismiss" />
+                    <Button
+                        android:id="@+id/buttonSave"
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="onClickSave"
+                        android:text="Save" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,17 +86,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
-        android:ems="10"
-        android:id="@+id/editTextDescr"
-        android:layout_weight="0.23" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Image"
-        android:onClick="onClickAddImage"
-        android:id="@+id/addImageButton" />
-
+        android:ems="5"
+        android:id="@+id/editTextDescr" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -56,29 +101,6 @@
         android:max="1000"
         android:progress="10"
         android:indeterminate="false" />
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save"
-        android:onClick="onClickSave"
-        android:id="@+id/buttonSave"
-        android:layout_gravity="right" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Dismiss"
-        android:onClick="onClickDismiss"
-        android:id="@+id/buttonDismiss" />
-
     </LinearLayout>
-
-
 
 </LinearLayout>

@@ -80,7 +80,7 @@ public class Route implements Serializable {
     }
 
     public void addImage(Bitmap image){
-        this.images.add(image);
+        //this.images.add(image);
     }
 
     public void setImages(List<Bitmap> images) {
@@ -113,6 +113,10 @@ public class Route implements Serializable {
 
     public void addPoi(Poi poi){
         this.pois.add(poi);
+    }
+
+    public List<Poi> getPois(){
+        return this.pois;
     }
 
     public Long getId() {
@@ -186,4 +190,10 @@ public class Route implements Serializable {
         sb.append('}');
         return sb.toString();
     }
+
+
+    public void setFuelStatios(List<FuelStation> chargingStations) {
+        this.fuelStations = chargingStations;
+    }
+
 }

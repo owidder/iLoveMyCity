@@ -47,16 +47,53 @@ public class DriveInService {
 
         Location current = LocationUtil.createLocation(currentVehicle.getLat(), currentVehicle.getLng());
 
-        for(Area area : areas) {
+        for(int i = 0; i < areas.size(); i++) {
+            Area area = areas.get(i);
             if (LocationUtil.isInArea(current, area)){
                 if( area.getState() == Area.AreaState.OUTSIDE){
                     area.setState(Area.AreaState.INSIDE);
-                    showDriveInEvent(area);
+
+                    if(area.getViaPoint() != null) {
+                        sendNextAddressToCar(i);
+                    } else {
+                        showDriveInEvent(area);
+                    }
                 }
             }else{
                 area.setState(Area.AreaState.OUTSIDE);
             }
         }
+    }
+
+    private void sendNextAddressToCar(int currentAreaPosition) {
+        Area nextPoiArea = findNextPoiAreaAfterPosition(currentAreaPosition);
+        if(nextPoiArea != null) {
+            Intent intent = new Intent(context, DriveInEventActivity.class);
+
+            String message = String.format("Send next address to car: lat = %d, lng = %d",
+                    nextPoiArea.getViaPoint().getLatitude(),
+                    nextPoiArea.getViaPoint().getLongitude());
+
+            intent.putExtra(BaseActivity.DRIVE_IN_EVENT_INTENT_EXTRA, message);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }
+    }
+
+    private Area findNextPoiAreaAfterPosition(int position) {
+        Area nextViaPointArea = null;
+
+        if(areas.size() > position+1) {
+            for(int j = position+1; j < areas.size(); j++) {
+                Area maybeViaPointArea = areas.get(j);
+                if(maybeViaPointArea.getViaPoint() != null) {
+                    nextViaPointArea = maybeViaPointArea;
+                    break;
+                }
+            }
+        }
+
+        return nextViaPointArea;
     }
 
     private void showDriveInEvent(Area area) {

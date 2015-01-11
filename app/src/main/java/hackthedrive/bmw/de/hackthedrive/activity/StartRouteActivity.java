@@ -4,14 +4,17 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -25,10 +28,16 @@ import java.util.List;
 import hackthedrive.bmw.de.hackthedrive.BaseMapActivity;
 import hackthedrive.bmw.de.hackthedrive.R;
 import hackthedrive.bmw.de.hackthedrive.domain.Area;
+import hackthedrive.bmw.de.hackthedrive.domain.FuelStation;
+import hackthedrive.bmw.de.hackthedrive.domain.Poi;
 import hackthedrive.bmw.de.hackthedrive.domain.Route;
 import hackthedrive.bmw.de.hackthedrive.factory.TestDataFactory;
+import hackthedrive.bmw.de.hackthedrive.service.ActiveRouteService;
 import hackthedrive.bmw.de.hackthedrive.service.DriveInService;
+import hackthedrive.bmw.de.hackthedrive.service.FuelStationService;
 import hackthedrive.bmw.de.hackthedrive.service.LocationMockService;
+import hackthedrive.bmw.de.hackthedrive.service.RouteService;
+import hackthedrive.bmw.de.hackthedrive.service.VehicleServiceAsyncWrapper;
 import hackthedrive.bmw.de.hackthedrive.util.GsonDeserializer;
 import hackthedrive.bmw.de.hackthedrive.util.LocationUtil;
 import hackthedrive.bmw.de.hackthedrive.util.LogUtil;
@@ -41,7 +50,10 @@ public class StartRouteActivity extends BaseMapActivity {
     private TextView txtCost;
 
     private Route route;
-    private Button startRouteButton;
+    private ImageButton startRouteButton;
+
+    private RouteService routeService;
+    private VehicleServiceAsyncWrapper vehicleService;
 
     @Override
     protected void onCreateMapView(Bundle savedInstanceState) {
@@ -64,13 +76,16 @@ public class StartRouteActivity extends BaseMapActivity {
         txtCost = (TextView)findViewById(R.id.txtCost);
         txtCost.setText(String.valueOf(route.getCostInDollar()));
 
-        startRouteButton = (Button)findViewById(R.id.start_route);
+        startRouteButton = (ImageButton)findViewById(R.id.start_route);
         startRouteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startNavigation();
             }
         });
+
+        routeService = new RouteService();
+        vehicleService = new VehicleServiceAsyncWrapper(getApplication());
 
         setupToolbar();
     }
@@ -91,7 +106,6 @@ public class StartRouteActivity extends BaseMapActivity {
 
     @Override
     protected void setUpMap() {
-
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LocationUtil.toLatLng(route.getStart()), 15));
         LocationMockService.getInstance(this).pushLocation(route.getStart());
 
@@ -128,19 +142,48 @@ public class StartRouteActivity extends BaseMapActivity {
         markers.add(addMarker(LocationUtil.toLatLng(route.getStart()), "Start", "Start of the route", BitmapDescriptorFactory.HUE_GREEN));
         markers.add(addMarker(LocationUtil.toLatLng(route.getEnd()), "End", "End of the route", BitmapDescriptorFactory.HUE_RED));
 
+        for(Poi poi: route.getPois()){
+            addMarker(LocationUtil.toLatLng(poi.getLocation()), "Poi", "",  BitmapDescriptorFactory.fromResource(R.drawable.liberty50));
+        }
         for(Location viaPoint : route.getViaPoints()){
             markers.add(addMarker(LocationUtil.toLatLng(viaPoint), "Via Point", "Via Point of the route", BitmapDescriptorFactory.HUE_YELLOW));
         }
 
+        new AsyncTask<Void, Void, List<FuelStation>>(){
+            @Override
+            protected List<FuelStation> doInBackground(Void... params) {
+                try {
+                    FuelStationService fuelStationService = new FuelStationService();
+                    route = fuelStationService.addChargingStations(route);
+                    return route.getFuelStations();
+                } catch(RuntimeException e){
+                    logger.w(e, "Problem fetching stations: %s", e.getMessage());
+                }
+                return new ArrayList<FuelStation>();
+            }
+
+            @Override
+            protected void onPostExecute(List<FuelStation> fuelStations) {
+                for(FuelStation fuelStation : fuelStations){
+                    addMarker(LocationUtil.toLatLng(fuelStation.getLocation()), "Charging Station", "",  BitmapDescriptorFactory.fromResource(R.drawable.icon_gas_station));
+                }
+
+            }
+        }.execute();
+
         return markers;
     }
 
-    private Marker addMarker(LatLng markerLoc, String title, String poiDescription, float color){
+    private Marker addMarker(LatLng markerLoc, String title, String poiDescription, BitmapDescriptor bDesc){
         return mMap.addMarker(new MarkerOptions()
                 .position(markerLoc)
                 .title(title)
                 .snippet(poiDescription)
-                .icon(BitmapDescriptorFactory.defaultMarker(color)));
+                .icon(bDesc));
+    }
+
+    private Marker addMarker(LatLng markerLoc, String title, String poiDescription, float color){
+        return addMarker(markerLoc, title, poiDescription, BitmapDescriptorFactory.defaultMarker(color));
     }
 
     private void startNavigation(){
@@ -148,6 +191,17 @@ public class StartRouteActivity extends BaseMapActivity {
         String url = "https://www.google.com/maps/dir/";
         url += route.getStart().getLatitude()+","+route.getStart().getLongitude() + "/";
         url += route.getEnd().getLatitude()+","+route.getEnd().getLongitude();
+
+        if( route.getPois().size() > 0 ){
+            url += "/";
+            for(int i = 0; i < route.getPois().size(); i++ ){
+                Location viaPoint = route.getPois().get(i).getLocation();
+                url += viaPoint.getLatitude()+","+viaPoint.getLongitude();
+                if( i+1 < route.getPois().size()){
+                    url += "/";
+                }
+            }
+        }
 
         if( route.getViaPoints().size() > 0 ){
             url += "/";
@@ -160,7 +214,10 @@ public class StartRouteActivity extends BaseMapActivity {
             }
         }
 
+        routeService.startRoute(route,vehicleService );
+
         DriveInService.getInstance(getApplicationContext()).startMonitoring(route.getDriveInAreas());
+        ActiveRouteService.getInstance(getApplicationContext()).setActiveRoute(route);
 
         logger.e("Starting with url: %s", url);
         Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(url));

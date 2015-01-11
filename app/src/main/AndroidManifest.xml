@@ -82,7 +82,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_panels" >
         </activity>
-        <activity android:name=".activity.StartRouteActivity" >
+        <activity android:name=".activity.StartRouteActivity">
         </activity>
         <activity android:name=".activity.SaveNewRouteActivity" >
         </activity>
@@ -94,6 +94,10 @@
         </activity>
         <activity
             android:name=".activity.DriveInEventActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" >
+        </activity>
+        <activity
+            android:name=".activity.DestinationReachedActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" >
         </activity>
 
