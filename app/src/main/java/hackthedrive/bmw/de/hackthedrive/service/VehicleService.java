@@ -1,12 +1,15 @@
 package hackthedrive.bmw.de.hackthedrive.service;
 
 import android.content.Context;
+import android.location.Location;
 import android.os.AsyncTask;
 
 import org.json.JSONObject;
 
 import hackthedrive.bmw.de.hackthedrive.R;
 import hackthedrive.bmw.de.hackthedrive.domain.Vehicle;
+import hackthedrive.bmw.de.hackthedrive.util.LocationUtil;
+import hackthedrive.bmw.de.hackthedrive.util.LogUtil;
 import hackthedrive.bmw.de.hackthedrive.util.RestClient;
 
 /**
@@ -14,8 +17,9 @@ import hackthedrive.bmw.de.hackthedrive.util.RestClient;
  */
 public class VehicleService {
 
+    private static final LogUtil logger = LogUtil.getLogger();
+
     private Context context;
-    final private StringBuffer serviceDataSb = new StringBuffer();
 
     public VehicleService(Context context) {
         this.context = context;
@@ -24,6 +28,8 @@ public class VehicleService {
     private JSONObject getServiceData() throws Exception {
         final RestClient client = new RestClient(context.getString(R.string.eventUrl));
         client.AddHeader("MojioAPIToken", context.getString(R.string.mojioAPIToken));
+        client.AddParam("limit", "1");
+        client.AddParam("offset", "0");
 
         client.Execute(RestClient.RequestMethod.GET);
         String response = client.getResponse();
@@ -31,6 +37,22 @@ public class VehicleService {
         JSONObject jsonObject = new JSONObject(response);
 
         return jsonObject;
+    }
+
+    public Location getCurrentLocation(){
+        try {
+            JSONObject serviceData = getServiceData();
+
+            JSONObject location = serviceData.getJSONArray("Data").getJSONObject(0).getJSONObject("Location");
+
+            Double lat = location.getDouble("Lat");
+            Double lon = location.getDouble("Lng");
+
+            return LocationUtil.createLocation(lat, lon);
+        } catch (Exception e) {
+           logger.e(e, "Problem with rest call. %s", e.getMessage());
+        }
+        return null;
     }
 
 

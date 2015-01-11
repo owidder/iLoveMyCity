@@ -14,6 +14,6 @@
     <string name="drawer_open">Open menu</string>
     <string name="drawer_close">Close menu</string>
     <string name="eventUrl">http://data.api.hackthedrive.com/v1/Events</string>
-    <string name="mojioAPIToken">e2494d31-223d-4022-b27c-2794136abf4c</string>
+    <string name="mojioAPIToken">191cea92-aca2-4923-8550-5a8525175939</string>
     <string name="title_navigation">Navigation</string>
 </resources>

@@ -99,16 +99,19 @@
             android:textColor="#000"
             android:textSize="20sp" />
 
-        <Button
+        <ImageButton
             android:id="@+id/addPoiButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="100dp"
             android:layout_margin="5dp"
             android:visibility="invisible"
             android:text="Add POI"
+            android:onClick="onClickAddPoi"
             android:layout_below="@+id/stopRecordingButton"
             android:textColor="#000"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:background="@null"
+            android:src="@drawable/liberty"/>
 
         <Button
             android:id="@+id/addViaPointButton"

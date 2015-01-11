@@ -37,6 +37,7 @@ public class MenuActivity extends BaseActivity {
 
     private void setupToolbar() {
         Toolbar toolbar = getActionBarToolbar();
+        setSupportActionBar(toolbar);
         toolbar.setTitle("Menu");
 
         ActionBar bar = getSupportActionBar();

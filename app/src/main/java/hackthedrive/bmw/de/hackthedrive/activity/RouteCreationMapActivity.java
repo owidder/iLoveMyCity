@@ -1,11 +1,15 @@
 package hackthedrive.bmw.de.hackthedrive.activity;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -13,22 +17,32 @@ import com.google.android.gms.maps.model.LatLng;
 import hackthedrive.bmw.de.hackthedrive.BaseMapActivity;
 import hackthedrive.bmw.de.hackthedrive.R;
 import hackthedrive.bmw.de.hackthedrive.WelcomeActivity;
+import hackthedrive.bmw.de.hackthedrive.domain.Poi;
 import hackthedrive.bmw.de.hackthedrive.domain.Route;
 import hackthedrive.bmw.de.hackthedrive.service.RouteService;
+import hackthedrive.bmw.de.hackthedrive.service.VehicleService;
+import hackthedrive.bmw.de.hackthedrive.util.LogUtil;
 
 /**
  * Created by dst on 10.01.2015.
  */
 public class RouteCreationMapActivity  extends BaseMapActivity {
+
+    private static final LogUtil logger = LogUtil.getLogger();
+
     private static final LatLng SAN_FRAN = new LatLng(37.752407, -122.416829);
+
+    private static int RESULT_ADD_POI = 1;
 
     private Button startRecordingButton;
     private Button stopRecordingButton;
-    private Button addPoiButton;
+    private ImageButton addPoiButton;
     private Button addViaPoiButton;
 
     private RouteService routeService;
     private Route route;
+
+    private VehicleService vehicleService;
 
     @Override
     protected void onCreateMapView(Bundle savedInstanceState) {
@@ -36,14 +50,15 @@ public class RouteCreationMapActivity  extends BaseMapActivity {
         setupToolbar();
         startRecordingButton = (Button)findViewById(R.id.startRecordingButton);
         stopRecordingButton = (Button)findViewById(R.id.stopRecordingButton);
-        addPoiButton = (Button)findViewById(R.id.addPoiButton);
+        addPoiButton = (ImageButton)findViewById(R.id.addPoiButton);
         addViaPoiButton = (Button)findViewById(R.id.addViaPointButton);
         routeService = new RouteService();
+        vehicleService = new VehicleService(getApplication());
     }
 
     private void setupToolbar() {
         Toolbar toolbar = getActionBarToolbar();
-        toolbar.setTitle("Map activity");
+        toolbar.setTitle("Create new route");
         toolbar.setNavigationIcon(R.drawable.ic_up);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,18 +85,72 @@ public class RouteCreationMapActivity  extends BaseMapActivity {
     }
 
     public void onClickStopRecording(View v){
+        openModalDialog(v.getContext());
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1) {
+            if(resultCode == RESULT_OK){
+                Poi result= (Poi)data.getSerializableExtra("result");
+                logger.d("Adding new poi: %s", result);
+                route.addPoi(result);
+            }
+            if (resultCode == RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
+    }//onActivityResult
+
+    public void onClickAddPoi(View v){
+        Intent i = new Intent(this, AddPoiActivity.class);
+        startActivityForResult(i, RESULT_ADD_POI);
+    }
+
+    private void resetButtons() {
         startRecordingButton.setVisibility(View.VISIBLE);
         stopRecordingButton.setVisibility(View.INVISIBLE);
         addViaPoiButton.setVisibility(View.INVISIBLE);
         addPoiButton.setVisibility(View.INVISIBLE);
-
-        route.setEnd(getCurrentLocation());
-        routeService.saveRoute(route);
     }
 
     ////
 
     private Location getCurrentLocation(){
-        return null;
+        return vehicleService.getCurrentLocation();
+    }
+
+    private void saveRoute(){
+        Intent i = new Intent(this, SaveNewRouteActivity.class);
+        i.putExtra("route", route);
+        startActivity(i);
+    }
+
+    private void openModalDialog(Context context){
+        AlertDialog dialog = new AlertDialog.Builder(context).setMessage("Save new route?")
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                        route.setEnd(getCurrentLocation());
+                        saveRoute();
+                    }
+                }).setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        resetButtons();
+                    }
+                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        dialog.dismiss();
+                    }
+                }).create();
+        dialog.show();
     }
 }

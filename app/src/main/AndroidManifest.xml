@@ -84,7 +84,16 @@
         <activity
             android:name=".activity.StartRouteActivity">
         </activity>
-
+        <activity
+            android:name=".activity.SaveNewRouteActivity">
+        </activity>
+        <activity
+            android:name=".activity.AddPoiActivity">
+        </activity>
+        <activity
+            android:name=".activity.SearchRouteActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize">
+        </activity>
 
     </application>
 

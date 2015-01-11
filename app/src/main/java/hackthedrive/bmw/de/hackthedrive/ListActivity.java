@@ -10,12 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import hackthedrive.bmw.de.hackthedrive.activity.RouteCreationMapActivity;
+import hackthedrive.bmw.de.hackthedrive.activity.SearchRouteActivity;
 import hackthedrive.bmw.de.hackthedrive.activity.StartRouteActivity;
 
 
@@ -49,15 +51,17 @@ public class ListActivity extends BaseActivity {
         final ListView listview = (ListView) findViewById(R.id.listview);
 
         final ArrayList<ListItem> list = new ArrayList<ListItem>();
-        list.add(new ListItem("Welcome", "Welcome example", WelcomeActivity.class));
-        list.add(new ListItem("Menu", "Menu example", MenuActivity.class));
-        list.add(new ListItem("Panels", "Panels example", PanelsActivity.class));
-        list.add(new ListItem("REST Api", "Sample rest call (GSON)", RestApiActivity.class));
-        list.add(new ListItem("Map Initial", "Map-Activity created by Studio", MapActivity.class));
-        list.add(new ListItem("Map Polygon", "Map-Activity with a polygon", MapPolygonActivity.class));
-        list.add(new ListItem("Map Colored Polyline", "Map-Activity with colored polyline", MapPolylineActivity.class));
-        list.add(new ListItem("Map Heatmap", "Map-...", MapHeatmapActivity.class));
-        list.add(new ListItem("Create route", "Create Route", RouteCreationMapActivity.class));
+        list.add(new ListItem("Start Route", "", R.drawable.car, StartRouteActivity.class));
+        list.add(new ListItem("Search Route", "", R.drawable.lupe, SearchRouteActivity.class));
+        list.add(new ListItem("Create Route", "", R.drawable.pointer, RouteCreationMapActivity.class));
+        list.add(new ListItem("Welcome", "Welcome example", R.drawable.exclamtion, WelcomeActivity.class));
+        list.add(new ListItem("Menu", "Menu example", R.drawable.exclamtion, MenuActivity.class));
+        list.add(new ListItem("Panels", "Panels example", R.drawable.exclamtion, PanelsActivity.class));
+        list.add(new ListItem("REST Api", "Sample rest call (GSON)", R.drawable.exclamtion, RestApiActivity.class));
+        list.add(new ListItem("Map Initial", "Map-Activity created by Studio", R.drawable.exclamtion, MapActivity.class));
+        list.add(new ListItem("Map Polygon", "Map-Activity with a polygon", R.drawable.exclamtion, MapPolygonActivity.class));
+        list.add(new ListItem("Map Colored Polyline", "Map-Activity with colored polyline", R.drawable.exclamtion, MapPolylineActivity.class));
+        list.add(new ListItem("Map Heatmap", "Map-...", R.drawable.exclamtion, MapHeatmapActivity.class));
 
         final ListItemArrayAdapter adapter = new ListItemArrayAdapter(this, list);
         listview.setAdapter(adapter);
@@ -79,10 +83,12 @@ public class ListActivity extends BaseActivity {
         private final String name;
         private final String description;
         private final Class<? extends Activity> activityToStart;
+        private int imageId;
 
-        public ListItem(String name, String description, Class<? extends Activity> activityToStart){
+        public ListItem(String name, String description, int imageId, Class<? extends Activity> activityToStart){
             this.name = name;
             this.description = description;
+            this.imageId = imageId;
             this.activityToStart = activityToStart;
         }
 
@@ -92,6 +98,10 @@ public class ListActivity extends BaseActivity {
 
         public String getDescription() {
             return description;
+        }
+
+        public int getImageId() {
+            return imageId;
         }
 
         public Class<? extends Activity> getActivityToStart() {
@@ -114,6 +124,9 @@ public class ListActivity extends BaseActivity {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowView = inflater.inflate(R.layout.list_row_template, parent, false);
+
+            ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
+            imageView.setImageResource(values.get(position).getImageId());
 
             TextView textView = (TextView) rowView.findViewById(R.id.firstLine);
             textView.setText(values.get(position).getName());

@@ -1,0 +1,57 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#e5e5e5"
+    android:orientation="vertical"
+    xmlns:iosched="http://schemas.android.com/apk/res-auto"
+    tools:context="hackthedrive.bmw.de.hackthedrive.activity.SearchRouteActivity">
+
+    <include layout="@layout/toolbar_actionbar_with_headerbar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            iosched:cardBackgroundColor="#fff"
+            iosched:cardCornerRadius="@dimen/card_corner_radius"
+            iosched:cardElevation="@dimen/card_elevation"
+            iosched:cardPreventCornerOverlap="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <EditText
+                    android:id="@+id/txtCost"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@string/font_fontFamily_medium"
+                    android:text="*"
+                    android:textColor="@color/theme_primary"
+                    android:textSize="@dimen/text_size_xlarge"
+                    android:layout_weight="90"/>
+
+                <Button
+                    android:id="@+id/search_route"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Search"
+                    android:layout_weight="10"/>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/listview"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</LinearLayout>

@@ -27,19 +27,27 @@ import hackthedrive.bmw.de.hackthedrive.util.LogUtil;
 public class StartRouteActivity extends BaseMapActivity {
     private static final LogUtil logger = LogUtil.getLogger(StartRouteActivity.class);
 
-    private TextView routeNameTxt;
+    private TextView txtPoiCount;
+    private TextView txtDistance;
+    private TextView txtCost;
+
     private Route route;
     private Button startRouteButton;
 
     @Override
     protected void onCreateMapView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_start_route);
-        setupToolbar();
 
         route = createTestRoute();
 
-        routeNameTxt = (TextView)findViewById(R.id.route_name);
-        routeNameTxt.setText("Route name: " + route.getName());
+        txtPoiCount = (TextView)findViewById(R.id.txtPoiCount);
+        txtPoiCount.setText(String.valueOf(route.getViaPoints().size() + 2));
+
+        txtDistance = (TextView)findViewById(R.id.txtDistance);
+        txtDistance.setText(String.valueOf(route.getDistanceInMi()));
+
+        txtCost = (TextView)findViewById(R.id.txtCost);
+        txtCost.setText(String.valueOf(route.getCostInDollar()));
 
         startRouteButton = (Button)findViewById(R.id.start_route);
         startRouteButton.setOnClickListener(new View.OnClickListener() {
@@ -48,10 +56,12 @@ public class StartRouteActivity extends BaseMapActivity {
                 startNavigation();
             }
         });
+
+        setupToolbar();
     }
     private void setupToolbar() {
         Toolbar toolbar = getActionBarToolbar();
-        toolbar.setTitle("Navigation");
+        toolbar.setTitle("Route: "  + route.getName());
         toolbar.setNavigationIcon(R.drawable.ic_up);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +117,10 @@ public class StartRouteActivity extends BaseMapActivity {
     private Route createTestRoute() {
         Route route = new Route();
         route.setName("Test Route");
+
+        route.setCostInDollar(30);
+        route.setDistanceInMi(39);
+
         route.setStart(LocationUtil.createLocation(37.778845, -122.414722));
         route.setEnd(LocationUtil.createLocation(37.779795, -122.407201));
 
