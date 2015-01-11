@@ -53,11 +53,7 @@ public class DriveInService {
                 if( area.getState() == Area.AreaState.OUTSIDE){
                     area.setState(Area.AreaState.INSIDE);
 
-                    if(area.getViaPoint() != null) {
-                        sendNextAddressToCar(i);
-                    } else {
-                        showDriveInEvent(area);
-                    }
+                    showDriveInEvent(i, area);
                 }
             }else{
                 area.setState(Area.AreaState.OUTSIDE);
@@ -65,40 +61,29 @@ public class DriveInService {
         }
     }
 
-    private void sendNextAddressToCar(int currentAreaPosition) {
-        Area nextPoiArea = findNextPoiAreaAfterPosition(currentAreaPosition);
-        if(nextPoiArea != null) {
-            Intent intent = new Intent(context, DriveInEventActivity.class);
-
-            String message = String.format("Send next address to car: lat = %d, lng = %d",
-                    nextPoiArea.getViaPoint().getLatitude(),
-                    nextPoiArea.getViaPoint().getLongitude());
-
-            intent.putExtra(BaseActivity.DRIVE_IN_EVENT_INTENT_EXTRA, message);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-        }
-    }
-
     private Area findNextPoiAreaAfterPosition(int position) {
         Area nextViaPointArea = null;
 
         if(areas.size() > position+1) {
-            for(int j = position+1; j < areas.size(); j++) {
+            return areas.get(position+1);
+            /*for(int j = position+1; j < areas.size(); j++) {
                 Area maybeViaPointArea = areas.get(j);
                 if(maybeViaPointArea.getViaPoint() != null) {
                     nextViaPointArea = maybeViaPointArea;
                     break;
                 }
-            }
+            }*/
         }
 
-        return nextViaPointArea;
+        return null;
     }
 
-    private void showDriveInEvent(Area area) {
+    private void showDriveInEvent(int currentAreaPosition, Area area) {
+        Area nextPoiArea = findNextPoiAreaAfterPosition(currentAreaPosition);
+
         Intent intent = new Intent(context, DriveInEventActivity.class);
         intent.putExtra(BaseActivity.DRIVE_IN_EVENT_INTENT_EXTRA, GsonSerializer.serialize(area));
+        intent.putExtra("next_point", GsonSerializer.serialize(area));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }

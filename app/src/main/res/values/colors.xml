@@ -1,8 +1,8 @@
 <resources>
     <color name="black_overlay">#66000000</color>
 
-    <color name="theme_primary">#AA0079</color>
-    <color name="theme_primary_dark">#654982</color>
+    <color name="theme_primary">#1c69d4</color>
+    <color name="theme_primary_dark">#1C69D4</color>
     <color name="theme_primary_light">#DBD1D8</color>
 
     <color name="body_text_1">#de000000</color>

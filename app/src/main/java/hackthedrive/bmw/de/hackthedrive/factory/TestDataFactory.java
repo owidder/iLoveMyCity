@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import hackthedrive.bmw.de.hackthedrive.domain.Area;
+import hackthedrive.bmw.de.hackthedrive.domain.Poi;
 import hackthedrive.bmw.de.hackthedrive.domain.Route;
 import hackthedrive.bmw.de.hackthedrive.util.LocationUtil;
 
@@ -37,11 +38,11 @@ public class TestDataFactory {
             route.setEndAddress(LocationUtil.geocodeLocation(context, route.getEnd()));
         }
 
-        List<Location> viaPoints = new ArrayList<Location>();
-        viaPoints.add(LocationUtil.createLocation(37.784254, -122.401481));
-        viaPoints.add(LocationUtil.createLocation(37.698249, -122.392854));
-        viaPoints.add(LocationUtil.createLocation(37.639802, -122.405671));
-        route.setViaPoints(viaPoints);
+        List<Poi> viaPoints = new ArrayList<Poi>();
+        viaPoints.add(createPoi(LocationUtil.createLocation(37.784254, -122.401481)));
+        viaPoints.add(createPoi(LocationUtil.createLocation(37.698249, -122.392854)));
+        viaPoints.add(createPoi(LocationUtil.createLocation(37.639802, -122.405671)));
+        route.setPois(viaPoints);
 
         Area area = new Area();
         area.addLocation(LocationUtil.createLocation(37.784657, -122.401135));
@@ -53,6 +54,14 @@ public class TestDataFactory {
         route.addDriveInArea(area);
 
         return route;
+    }
+
+    private static Poi createPoi(Location location){
+        Poi viaPoint = new Poi();
+        viaPoint.setLocation(location);
+        viaPoint.setRadius(10);
+        viaPoint.setName("ViaPoint");
+        return viaPoint;
     }
 
     private static Route createTestRoute2(Context context, boolean resolveAdress) {

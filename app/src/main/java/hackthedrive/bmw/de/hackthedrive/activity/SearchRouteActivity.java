@@ -74,8 +74,12 @@ public class SearchRouteActivity extends BaseActivity {
                     for (Route route : localRoutes) {
                         // get start address: HACK just for NOW
                         route.setStartAddress(LocationUtil.geocodeLocation(getApplicationContext(), LocationUtil.toLatLng(route.getStart())));
-                        route.setEndAddress(LocationUtil.geocodeLocation(getApplicationContext(), LocationUtil.toLatLng(route.getStart())));
+                        route.setEndAddress(LocationUtil.geocodeLocation(getApplicationContext(), LocationUtil.toLatLng(route.getEnd())));
                         list.add(route);
+
+                        route.setRating(5.0f);
+                        route.setDistanceInMi(30);
+                        route.setCostInDollar(15);
                     }
                     logger.i("Added db routes");
                 } catch (Exception ex){

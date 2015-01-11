@@ -116,7 +116,7 @@
                         android:layout_height="wrap_content"
                         android:text="Start"
                         android:background="@null"
-                        android:src="@drawable/car64"/>
+                        android:src="@drawable/car48"/>
                 </LinearLayout>
 
             </LinearLayout>

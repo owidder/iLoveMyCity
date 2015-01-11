@@ -63,6 +63,10 @@ public class Poi implements Serializable {
         this.images.add(image);
     }
 
+    public boolean isViaPoint() {
+        return this.name.equals("ViaPoint");
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Poi{");
@@ -73,4 +77,6 @@ public class Poi implements Serializable {
         sb.append('}');
         return sb.toString();
     }
+
+
 }

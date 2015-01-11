@@ -14,7 +14,7 @@
 
         <!-- Logo -->
         <ImageView
-            android:src="@drawable/ilmc200"
+            android:src="@drawable/ilmc"
             android:layout_marginTop="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
                 android:paddingBottom="16dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:paddingTop="280dp"
+                android:paddingTop="680dp"
                 android:clipToPadding="false">
 
                 <android.support.v7.widget.CardView
@@ -55,6 +55,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:fontFamily="@string/font_fontFamily_medium"
                             android:text="I Love My City"
                             android:textColor="@color/theme_primary"
@@ -64,6 +65,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:fontFamily="@string/font_fontFamily_medium"
                             android:text="I Love My Car"
                             android:textColor="@color/theme_primary"
@@ -71,13 +73,14 @@
                             android:textStyle="@integer/font_textStyle_medium" />
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:layout_marginTop="16dp"
                             android:autoLink="web"
                             android:text="Show your city to the world by sharing great tours in an awesome car!"
                             android:textColor="@color/body_text_2"
-                            android:textSize="@dimen/text_size_medium" />
+                            android:textSize="@dimen/text_size_medium"/>
 
 
                     </LinearLayout>
@@ -99,25 +102,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="?attr/selectableItemBackground"
-            android:text="Create tour (via car)"
+            android:text="Share"
             android:textSize="@dimen/text_size_medium"
             android:textStyle="@integer/font_textStyle_medium"
             android:fontFamily="@string/font_fontFamily_medium"
             android:textAllCaps="true"
             android:textColor="#fff" />
 
-
-        <Button
-            android:id="@+id/create_via_pois"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackground"
-            android:text="Create tour (via POI)"
-            android:textSize="@dimen/text_size_medium"
-            android:textStyle="@integer/font_textStyle_medium"
-            android:fontFamily="@string/font_fontFamily_medium"
-            android:textAllCaps="true"
-            android:textColor="#fff" />
 
         <Button
             android:id="@+id/use_existing"
@@ -131,6 +122,19 @@
             android:fontFamily="@string/font_fontFamily_medium"
             android:textAllCaps="true"
             android:textColor="#fff" />
+
+        <Button
+            android:id="@+id/create_via_pois"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackground"
+            android:text="User settings"
+            android:textSize="@dimen/text_size_medium"
+            android:textStyle="@integer/font_textStyle_medium"
+            android:fontFamily="@string/font_fontFamily_medium"
+            android:textAllCaps="true"
+            android:textColor="#fff" />
+
     </LinearLayout>
 
 </LinearLayout>

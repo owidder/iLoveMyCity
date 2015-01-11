@@ -13,7 +13,7 @@ import hackthedrive.bmw.de.hackthedrive.util.LocationUtil;
  * Created by ewa on 10.01.2015.
  */
 public class VehicleServiceAsyncWrapper {
-    public static final long POLLING_INTERVAL = 2000;
+    public static final long POLLING_INTERVAL = 1000;
 
     private List<VehicleDataListener> listeners = new ArrayList<VehicleDataListener>();
     private Thread updateThread;

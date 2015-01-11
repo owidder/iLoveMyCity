@@ -1,15 +1,11 @@
 package hackthedrive.bmw.de.hackthedrive.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import hackthedrive.bmw.de.hackthedrive.BaseActivity;
-import hackthedrive.bmw.de.hackthedrive.ListActivity;
 import hackthedrive.bmw.de.hackthedrive.R;
-import hackthedrive.bmw.de.hackthedrive.domain.Route;
-import hackthedrive.bmw.de.hackthedrive.util.GsonSerializer;
 
 public class WelcomeActivity extends BaseActivity {
 
@@ -30,7 +26,8 @@ public class WelcomeActivity extends BaseActivity {
         findViewById(R.id.create_via_pois).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO
+                Intent intent = new Intent(WelcomeActivity.this, UserActivity.class);
+                startActivity(intent);
             }
         });
 

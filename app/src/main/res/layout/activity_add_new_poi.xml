@@ -31,12 +31,32 @@
                 android:orientation="horizontal"
                 android:padding="10dp">
 
-                <Button
+                <ImageButton
                     android:id="@+id/addImageButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:onClick="onClickAddImage"
-                    android:text="Add Image" />
+                    android:text="Add Image"
+                    android:background="@null"
+                    android:src="@drawable/polaroidcamera48"/>
+
+                <ImageButton
+                    android:id="@+id/startSoundRecordButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="start record"
+                    android:onClick="onClickStartRecording"
+                    android:background="@null"
+                    android:src="@drawable/microphone48"/>
+                <ImageButton
+                    android:id="@+id/stopSoundRecordButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="stop record"
+                    android:visibility="gone"
+                    android:onClick="onClickStopRecording"
+                    android:background="@null"
+                    android:src="@drawable/stop48"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -44,19 +64,23 @@
                     android:gravity="center_horizontal|right"
                     android:orientation="horizontal">
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/buttonDismiss"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:onClick="onClickDismiss"
-                        android:text="Dismiss" />
-                    <Button
+                        android:text="Dismiss"
+                        android:background="@null"
+                        android:src="@drawable/denied48"/>
+                    <ImageButton
                         android:id="@+id/buttonSave"
                         android:layout_marginLeft="5dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:onClick="onClickSave"
-                        android:text="Save" />
+                        android:text="Save"
+                        android:background="@null"
+                        android:src="@drawable/check48"/>
 
                 </LinearLayout>
 

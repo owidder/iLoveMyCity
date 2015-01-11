@@ -2,19 +2,19 @@ package hackthedrive.bmw.de.hackthedrive.activity;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 
 import hackthedrive.bmw.de.hackthedrive.BaseActivity;
 import hackthedrive.bmw.de.hackthedrive.R;
 import hackthedrive.bmw.de.hackthedrive.domain.Poi;
-import hackthedrive.bmw.de.hackthedrive.service.VehicleService;
 import hackthedrive.bmw.de.hackthedrive.service.VehicleServiceAsyncWrapper;
 import hackthedrive.bmw.de.hackthedrive.util.GsonSerializer;
 import hackthedrive.bmw.de.hackthedrive.util.LogUtil;
@@ -28,7 +28,11 @@ public class AddPoiActivity extends BaseActivity {
 
     private Poi poi;
 
+    private ImageButton startSoundRecordButton;
+    private ImageButton stopSoundRecordButton;
+
     private static int RESULT_LOAD_IMAGE = 1;
+    private MediaRecorder recorder;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -36,6 +40,9 @@ public class AddPoiActivity extends BaseActivity {
         setContentView(R.layout.activity_add_new_poi);
         poi = new Poi();
         setupToolbar();
+
+        startSoundRecordButton = (ImageButton)findViewById(R.id.startSoundRecordButton);
+        stopSoundRecordButton = (ImageButton)findViewById(R.id.stopSoundRecordButton);
     }
 
     private void setupToolbar() {
@@ -73,6 +80,37 @@ public class AddPoiActivity extends BaseActivity {
     public void onClickAddImage(View v){
         Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, RESULT_LOAD_IMAGE);
+    }
+
+
+    public void onClickStartRecording(View v){
+        startSoundRecordButton.setVisibility(View.GONE);
+        stopSoundRecordButton.setVisibility(View.VISIBLE);
+
+        /**
+        recorder = new MediaRecorder();
+        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        recorder.setOutputFile("");
+        try {
+            recorder.prepare();
+        } catch (IOException e) {
+            logger.w(e, "Problem with sound recording. %s", e.getMessage());
+        }
+        recorder.start();   // Recording is now started
+         */
+    }
+
+    public void onClickStopRecording(View v) {
+        startSoundRecordButton.setVisibility(View.VISIBLE);
+        stopSoundRecordButton.setVisibility(View.GONE);
+        /**
+        if(recorder != null) {
+            recorder.stop();
+            recorder.reset();   // You can reuse the object by going back to setAudioSource() step
+            recorder.release(); // Now the object cannot be reused
+        }*/
     }
 
     @Override

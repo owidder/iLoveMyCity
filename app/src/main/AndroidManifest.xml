@@ -20,7 +20,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/heart192"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         android:name="HtdApplication">
@@ -87,6 +87,10 @@
         <activity android:name=".activity.SaveNewRouteActivity" >
         </activity>
         <activity android:name=".activity.AddPoiActivity" >
+        </activity>
+        <activity android:name=".activity.UserActivity" >
+        </activity>
+        <activity android:name=".activity.SearchPoiActivity" >
         </activity>
         <activity
             android:name=".activity.SearchRouteActivity"

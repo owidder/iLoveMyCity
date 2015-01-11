@@ -43,7 +43,7 @@ public class ActiveRouteService {
         this.route = route;
         this.endPolygon = new ArrayList<Location>();
 
-        List<LatLng> rectangle = PolygonUtil.createRectangle(LocationUtil.toLatLng(route.getEnd()), 0.0001, 0.0001);
+        List<LatLng> rectangle = PolygonUtil.createRectangle(LocationUtil.toLatLng(route.getEnd()), 0.0003, 0.0003);
         for(LatLng p : rectangle){
             endPolygon.add(LocationUtil.createLocation(p.latitude, p.longitude));
         }
@@ -60,9 +60,12 @@ public class ActiveRouteService {
         this.route = null;
         this.endPolygon  = null;
 
+        DriveInService.getInstance(context).startMonitoring(null);
+
         Intent intent = new Intent(context, DestinationReachedActivity.class);
         intent.putExtra(BaseActivity.ROUTE_INTENT_EXTRA, GsonSerializer.serialize(new Route()));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+
     }
 }

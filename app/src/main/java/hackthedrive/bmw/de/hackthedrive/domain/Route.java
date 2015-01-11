@@ -2,9 +2,6 @@ package hackthedrive.bmw.de.hackthedrive.domain;
 
 import android.graphics.Bitmap;
 import android.location.Location;
-import android.media.Image;
-
-import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -25,8 +22,6 @@ public class Route implements Serializable {
 
     private Location end;
     private String endAddress;
-
-    private List<Location> viaPoints = new ArrayList<Location>();
 
     private List<FuelStation> fuelStations = new ArrayList<>();
 
@@ -65,14 +60,6 @@ public class Route implements Serializable {
 
     public void setEnd(Location end) {
         this.end = end;
-    }
-
-    public List<Location> getViaPoints() {
-        return viaPoints;
-    }
-
-    public void setViaPoints(List<Location> viaPoints) {
-        this.viaPoints = viaPoints;
     }
 
     public List<Bitmap> getImages() {
@@ -127,11 +114,6 @@ public class Route implements Serializable {
         this.id = id;
     }
 
-    public void addViaPoint(Location location){
-        this.viaPoints.add(location);
-    }
-
-
     public String getStartAddress() {
         return startAddress;
     }
@@ -185,15 +167,16 @@ public class Route implements Serializable {
         sb.append(", description='").append(description).append('\'');
         sb.append(", start=").append(start);
         sb.append(", end=").append(end);
-        sb.append(", viaPoints=").append(viaPoints);
         sb.append(", images=").append(images);
         sb.append('}');
         return sb.toString();
     }
 
-
     public void setFuelStatios(List<FuelStation> chargingStations) {
         this.fuelStations = chargingStations;
     }
 
+    public void setPois(List<Poi> pois) {
+        this.pois = pois;
+    }
 }

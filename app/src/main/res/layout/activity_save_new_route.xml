@@ -37,7 +37,7 @@
                     android:onClick="onClickAddImage"
                     android:text="Add Image"
                     android:background="@null"
-                    android:src="@drawable/polaroidcamera64"/>
+                    android:src="@drawable/polaroidcamera48"/>
 
                 <ImageButton
                     android:id="@+id/shareButton"
@@ -47,7 +47,7 @@
                     android:onClick="onClickAddImage"
                     android:text="Add Image"
                     android:background="@null"
-                    android:src="@drawable/upload64"/>
+                    android:src="@drawable/upload48"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -61,7 +61,7 @@
                         android:layout_height="wrap_content"
                         android:text="Dismiss"
                         android:background="@null"
-                        android:src="@drawable/denied64"/>
+                        android:src="@drawable/denied48"/>
                     <ImageButton
                         android:id="@+id/buttonSave"
                         android:layout_marginLeft="5dp"
@@ -70,7 +70,7 @@
                         android:onClick="onClickSave"
                         android:text="Save"
                         android:background="@null"
-                        android:src="@drawable/check64"/>
+                        android:src="@drawable/check48"/>
 
                 </LinearLayout>
 

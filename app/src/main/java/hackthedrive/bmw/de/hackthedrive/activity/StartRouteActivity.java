@@ -31,6 +31,7 @@ import hackthedrive.bmw.de.hackthedrive.domain.Area;
 import hackthedrive.bmw.de.hackthedrive.domain.FuelStation;
 import hackthedrive.bmw.de.hackthedrive.domain.Poi;
 import hackthedrive.bmw.de.hackthedrive.domain.Route;
+import hackthedrive.bmw.de.hackthedrive.domain.Vehicle;
 import hackthedrive.bmw.de.hackthedrive.factory.TestDataFactory;
 import hackthedrive.bmw.de.hackthedrive.service.ActiveRouteService;
 import hackthedrive.bmw.de.hackthedrive.service.DriveInService;
@@ -42,7 +43,7 @@ import hackthedrive.bmw.de.hackthedrive.util.GsonDeserializer;
 import hackthedrive.bmw.de.hackthedrive.util.LocationUtil;
 import hackthedrive.bmw.de.hackthedrive.util.LogUtil;
 
-public class StartRouteActivity extends BaseMapActivity {
+public class StartRouteActivity extends BaseMapActivity  implements VehicleServiceAsyncWrapper.VehicleDataListener {
     private static final LogUtil logger = LogUtil.getLogger(StartRouteActivity.class);
 
     private TextView txtPoiCount;
@@ -54,6 +55,8 @@ public class StartRouteActivity extends BaseMapActivity {
 
     private RouteService routeService;
     private VehicleServiceAsyncWrapper vehicleService;
+
+    private Marker markerCar;
 
     @Override
     protected void onCreateMapView(Bundle savedInstanceState) {
@@ -68,7 +71,7 @@ public class StartRouteActivity extends BaseMapActivity {
         }
 
         txtPoiCount = (TextView)findViewById(R.id.txtPoiCount);
-        txtPoiCount.setText(String.valueOf(route.getViaPoints().size() + 2));
+        txtPoiCount.setText(String.valueOf(route.getPois().size() + 2));
 
         txtDistance = (TextView)findViewById(R.id.txtDistance);
         txtDistance.setText(String.valueOf(route.getDistanceInMi()));
@@ -109,7 +112,7 @@ public class StartRouteActivity extends BaseMapActivity {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LocationUtil.toLatLng(route.getStart()), 15));
         LocationMockService.getInstance(this).pushLocation(route.getStart());
 
-        addPolygons();
+        //addPolygons();
 
         List<Marker> markers = addMarkers();
         final LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -122,6 +125,23 @@ public class StartRouteActivity extends BaseMapActivity {
                 mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 30));
             }
         });
+
+        onVehicleDataChanged(VehicleServiceAsyncWrapper.instance(getApplicationContext()).getLastVehicle());
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        VehicleServiceAsyncWrapper.instance(getApplicationContext()).addListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        VehicleServiceAsyncWrapper.instance(getApplicationContext()).removeListener(this);
     }
 
     private void addPolygons() {
@@ -143,10 +163,11 @@ public class StartRouteActivity extends BaseMapActivity {
         markers.add(addMarker(LocationUtil.toLatLng(route.getEnd()), "End", "End of the route", BitmapDescriptorFactory.HUE_RED));
 
         for(Poi poi: route.getPois()){
-            addMarker(LocationUtil.toLatLng(poi.getLocation()), "Poi", "",  BitmapDescriptorFactory.fromResource(R.drawable.liberty50));
-        }
-        for(Location viaPoint : route.getViaPoints()){
-            markers.add(addMarker(LocationUtil.toLatLng(viaPoint), "Via Point", "Via Point of the route", BitmapDescriptorFactory.HUE_YELLOW));
+            if (poi.isViaPoint()){
+                markers.add(addMarker(LocationUtil.toLatLng(poi.getLocation()), "Via Point", "Via Point of the route", BitmapDescriptorFactory.HUE_YELLOW));
+            } else {
+                addMarker(LocationUtil.toLatLng(poi.getLocation()), "Poi", "",  BitmapDescriptorFactory.fromResource(R.drawable.liberty50));
+            }
         }
 
         new AsyncTask<Void, Void, List<FuelStation>>(){
@@ -192,27 +213,13 @@ public class StartRouteActivity extends BaseMapActivity {
         url += route.getStart().getLatitude()+","+route.getStart().getLongitude() + "/";
         url += route.getEnd().getLatitude()+","+route.getEnd().getLongitude();
 
+        /**
         if( route.getPois().size() > 0 ){
-            url += "/";
             for(int i = 0; i < route.getPois().size(); i++ ){
                 Location viaPoint = route.getPois().get(i).getLocation();
-                url += viaPoint.getLatitude()+","+viaPoint.getLongitude();
-                if( i+1 < route.getPois().size()){
-                    url += "/";
-                }
+                url += viaPoint.getLatitude()+","+viaPoint.getLongitude() + "/";
             }
-        }
-
-        if( route.getViaPoints().size() > 0 ){
-            url += "/";
-            for(int i = 0; i < route.getViaPoints().size(); i++ ){
-                Location viaPoint = route.getViaPoints().get(i);
-                url += viaPoint.getLatitude()+","+viaPoint.getLongitude();
-                if( i+1 < route.getViaPoints().size()){
-                    url += "/";
-                }
-            }
-        }
+        }*/
 
         routeService.startRoute(route,vehicleService );
 
@@ -224,4 +231,25 @@ public class StartRouteActivity extends BaseMapActivity {
         startActivity(intent);
     }
 
+
+    @Override
+    public void onVehicleDataChanged(final Vehicle data) {
+        if( data == null ){
+            return;
+        }
+
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                LatLng latLng = new LatLng(data.getLat(), data.getLng());
+                if( markerCar == null ) {
+                    markerCar = addMarker(LocationUtil.toLatLng(route.getStart()), "Start", "Start of the route", BitmapDescriptorFactory.HUE_GREEN);
+                    markerCar.setAlpha(0.4f);
+                }
+                else{
+                    markerCar.setPosition(latLng);
+                }
+            }
+        });
+    }
 }

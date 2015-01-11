@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +17,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.List;
 
@@ -59,6 +62,8 @@ public class RouteCreationMapActivity  extends BaseMapActivity implements Vehicl
 
     private VehicleService vehicleService;
     private Marker marker;
+
+    private Polyline routePolyline;
 
     @Override
     protected void onCreateMapView(Bundle savedInstanceState) {
@@ -124,6 +129,11 @@ public class RouteCreationMapActivity  extends BaseMapActivity implements Vehicl
         route = routeService.createNewRoute(currentLocation);
 
         mMap.addMarker(new MarkerOptions().position(LocationUtil.toLatLng(currentLocation)).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+        // mark route on map:
+        PolylineOptions rectLine = new PolylineOptions().width(3).color(Color.GRAY);
+        rectLine.add(LocationUtil.toLatLng(currentLocation));
+        routePolyline = mMap.addPolyline(rectLine);
     }
 
     public void onClickStopRecording(View v){
@@ -138,6 +148,11 @@ public class RouteCreationMapActivity  extends BaseMapActivity implements Vehicl
                 logger.d("Adding new poi: %s", result);
                 route.addPoi(result);
 
+                Area area = createAreaFromViaPoint(result.getLocation(), result.getDesc());
+                if(area != null) {
+                    route.addDriveInArea(area);
+                }
+
                 Toast.makeText(getApplicationContext(), "Poi added + ("+result.getName()+")", Toast.LENGTH_SHORT).show();
                 mMap.addMarker(new MarkerOptions().position(LocationUtil.toLatLng(result.getLocation())).icon(BitmapDescriptorFactory.fromResource(R.drawable.liberty50)));
             }
@@ -149,8 +164,13 @@ public class RouteCreationMapActivity  extends BaseMapActivity implements Vehicl
 
     public void onClickAddViaPoint(View v){
         Location currentLocation = getCurrentLocation();
-        route.addViaPoint(currentLocation);
-        Area area = createAreaFromViaPoint(getCurrentLocation());
+        Poi viaPoint = new Poi();
+        viaPoint.setLocation(currentLocation);
+        viaPoint.setRadius(10);
+        viaPoint.setName("ViaPoint");
+        route.addPoi(viaPoint);
+
+        Area area = createAreaFromViaPoint(currentLocation, "");
         if(area != null) {
             route.addDriveInArea(area);
         }
@@ -204,6 +224,8 @@ public class RouteCreationMapActivity  extends BaseMapActivity implements Vehicl
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         resetButtons();
+                        routePolyline.remove();
+                        routePolyline = null;
                     }
                 }).setOnCancelListener(new DialogInterface.OnCancelListener() {
 
@@ -215,19 +237,23 @@ public class RouteCreationMapActivity  extends BaseMapActivity implements Vehicl
         dialog.show();
     }
 
-    private Area createAreaFromViaPoint(Location viaPoint) {
+    private Area createAreaFromViaPoint(Location viaPoint, String text) {
         Area area = null;
 
         if(viaPoint != null) {
             LatLng center = new LatLng(viaPoint.getLatitude(), viaPoint.getLongitude());
 
-            List<LatLng> cornersLatLng = LocationUtil.createRectangle(center, 0.0001, 0.0001);
+            List<LatLng> cornersLatLng = LocationUtil.createRectangle(center, 0.0003, 0.0003);
             List<Location> cornersLocation = LocationUtil.listOfLatLng2listLOfLocation(cornersLatLng);
+
+            //String txt = LocationUtil.geocodeLocation(getApplicationContext(), center);
+            //txt = "Address: " + txt + "\n\n" + text;
+            String txt = text;
 
             area = new Area();
             area.setViaPoint(viaPoint);
-
             area.setLocations(cornersLocation);
+            area.setText(txt);
         }
 
         return area;
@@ -241,6 +267,12 @@ public class RouteCreationMapActivity  extends BaseMapActivity implements Vehicl
                 LatLng latLng = new LatLng(data.getLat(), data.getLng());
                 marker.setPosition(latLng);
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+
+                if(null != routePolyline) {
+                    List<LatLng> points = routePolyline.getPoints();
+                    points.add(latLng);
+                    routePolyline.setPoints(points);
+                }
             }
         });
     }

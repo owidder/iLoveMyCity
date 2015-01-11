@@ -27,7 +27,7 @@ public class DbHelper extends SQLiteOpenHelper {
             .format("create table if not exists %s ( %s integer primary key autoincrement, %s text not null) ",
             TABLE_ROUTES, COLUMN_ID,COLUMN_JSON);
 
-    public static final String TABLE_ROUTES_USER = "nav_route";
+    public static final String TABLE_ROUTES_USER = "user_routes";
     public static final String COLUMN_ID_RU = "_id";
     public static final String COLUMN_ROUTE_ID_RU = "routeId";
     public static final String COLUMN_LAT_RU = "lat";
