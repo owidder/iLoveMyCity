@@ -6,6 +6,7 @@ import android.location.Location;
 import java.util.ArrayList;
 import java.util.List;
 
+import hackthedrive.bmw.de.hackthedrive.domain.Area;
 import hackthedrive.bmw.de.hackthedrive.domain.Route;
 import hackthedrive.bmw.de.hackthedrive.util.LocationUtil;
 
@@ -36,12 +37,21 @@ public class TestDataFactory {
             route.setEndAddress(LocationUtil.geocodeLocation(context, route.getEnd()));
         }
 
-
         List<Location> viaPoints = new ArrayList<Location>();
+        viaPoints.add(LocationUtil.createLocation(37.784254, -122.401481));
         viaPoints.add(LocationUtil.createLocation(37.698249, -122.392854));
         viaPoints.add(LocationUtil.createLocation(37.639802, -122.405671));
-
         route.setViaPoints(viaPoints);
+
+        Area area = new Area();
+        area.addLocation(LocationUtil.createLocation(37.784657, -122.401135));
+        area.addLocation(LocationUtil.createLocation(37.784364, -122.401173));
+        area.addLocation(LocationUtil.createLocation(37.784235, -122.401361));
+        area.addLocation(LocationUtil.createLocation(37.784311, -122.401540));
+
+        area.setText("On the north-western side you can see the best bars and restaurants in town. \n\nAt least that is what I have been told!");
+        route.addDriveInArea(area);
+
         return route;
     }
 

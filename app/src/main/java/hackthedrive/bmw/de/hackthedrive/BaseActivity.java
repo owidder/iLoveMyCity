@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 
 public abstract class BaseActivity extends ActionBarActivity {
     public static final String ROUTE_INTENT_EXTRA = "ROUTE";
+    public static final String DRIVE_IN_EVENT_INTENT_EXTRA = "DRIVE_IN_EVENT";
 
     private Toolbar mActionBarToolbar;
 

@@ -28,27 +28,36 @@ public class RouteDataSource {
     private String[] allColumns = { DbHelper.COLUMN_ID,
             DbHelper.COLUMN_JSON };
 
-    public RouteDataSource(Context context) {
-        dbHelper = new DbHelper(context);
+    public RouteDataSource() {
+        dbHelper = DbHelper.getInstance();
     }
 
     public void open(){
         database = dbHelper.getWritableDatabase();
     }
 
+    public void openRead(){
+        database = dbHelper.getReadableDatabase();
+    }
+
     public void close() {
-        dbHelper.close();
+        database.close();
+        database = null;
     }
 
     public boolean save(Route route){
+        open();
         logger.d("Save route: %s", route);
         ContentValues newContent = new ContentValues();
         newContent.put(DbHelper.COLUMN_JSON, GsonSerializer.serialize(route));
 
-        return database.insert(DbHelper.TABLE_ROUTES, null, newContent) > 0;
+        boolean success = database.insert(DbHelper.TABLE_ROUTES, null, newContent) > 0;
+        close();
+        return success;
     }
 
     public List<Route> getAllRoutes() {
+        openRead();
         List<Route> comments = new ArrayList<>();
 
         Cursor cursor = database.query(DbHelper.TABLE_ROUTES,
@@ -56,12 +65,13 @@ public class RouteDataSource {
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            Route comment = cursorToRoute(cursor);
-            comments.add(comment);
+            Route route = cursorToRoute(cursor);
+            comments.add(route);
             cursor.moveToNext();
         }
         // make sure to close the cursor
         cursor.close();
+        close();
         return comments;
     }
 
@@ -76,7 +86,7 @@ public class RouteDataSource {
     public Route getRoute(long id){
         Cursor cursor = null;
         try {
-            cursor =  database.query(true, DbHelper.TABLE_ROUTES, new String[]{DbHelper.COLUMN_ID,DbHelper.COLUMN_JSON}, "_id=" + id, null, null, null,
+            cursor =  database.query(true, DbHelper.TABLE_ROUTES, new String[]{DbHelper.COLUMN_ID, DbHelper.COLUMN_JSON}, "_id=" + id, null, null, null,
                     null, null);
             if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
                 logger.i("Route has not been set yet!");

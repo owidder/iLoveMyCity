@@ -18,6 +18,7 @@ public class VehicleServiceAsyncWrapper {
     private VehicleUpdateRunnable updateRunnable;
     private VehicleService vehicleService;
     private Vehicle currentVehicle;
+    private Context context;
 
     private static VehicleServiceAsyncWrapper instance;
     public static VehicleServiceAsyncWrapper instance(Context context){
@@ -29,6 +30,7 @@ public class VehicleServiceAsyncWrapper {
     }
 
     public VehicleServiceAsyncWrapper(Context context) {
+        this.context = context;
         vehicleService = new VehicleService(context);
     }
 
@@ -93,6 +95,7 @@ public class VehicleServiceAsyncWrapper {
                     for (VehicleDataListener listener : listeners) {
                         listener.onVehicleDataChanged(currentVehicle);
                     }
+                    DriveInService.getInstance(context).processLocationChange(currentVehicle);
                 }
 
                 try {

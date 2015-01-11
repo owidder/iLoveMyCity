@@ -1,6 +1,7 @@
 package hackthedrive.bmw.de.hackthedrive.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,15 +17,17 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolygonOptions;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import hackthedrive.bmw.de.hackthedrive.BaseMapActivity;
 import hackthedrive.bmw.de.hackthedrive.R;
-import hackthedrive.bmw.de.hackthedrive.WelcomeActivity;
+import hackthedrive.bmw.de.hackthedrive.domain.Area;
 import hackthedrive.bmw.de.hackthedrive.domain.Route;
 import hackthedrive.bmw.de.hackthedrive.factory.TestDataFactory;
+import hackthedrive.bmw.de.hackthedrive.service.DriveInService;
 import hackthedrive.bmw.de.hackthedrive.service.LocationMockService;
 import hackthedrive.bmw.de.hackthedrive.util.GsonDeserializer;
 import hackthedrive.bmw.de.hackthedrive.util.LocationUtil;
@@ -71,6 +74,7 @@ public class StartRouteActivity extends BaseMapActivity {
 
         setupToolbar();
     }
+
     private void setupToolbar() {
         Toolbar toolbar = getActionBarToolbar();
         toolbar.setTitle("Route: "  + route.getName());
@@ -85,22 +89,15 @@ public class StartRouteActivity extends BaseMapActivity {
         });
     }
 
-
     @Override
     protected void setUpMap() {
-        List<Marker> markers = new ArrayList<Marker>();
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LocationUtil.toLatLng(route.getStart()), 15));
-
         LocationMockService.getInstance(this).pushLocation(route.getStart());
 
-        markers.add(addMarker(LocationUtil.toLatLng(route.getStart()), "Start", "Start of the route", BitmapDescriptorFactory.HUE_GREEN));
-        markers.add(addMarker(LocationUtil.toLatLng(route.getEnd()), "End", "End of the route", BitmapDescriptorFactory.HUE_RED));
+        addPolygons();
 
-        for(Location viaPoint : route.getViaPoints()){
-            markers.add(addMarker(LocationUtil.toLatLng(viaPoint), "Via Point", "Via Point of the route", BitmapDescriptorFactory.HUE_YELLOW));
-        }
-
+        List<Marker> markers = addMarkers();
         final LatLngBounds.Builder builder = new LatLngBounds.Builder();
         for (Marker marker : markers) {
             builder.include(marker.getPosition());
@@ -112,6 +109,32 @@ public class StartRouteActivity extends BaseMapActivity {
             }
         });
     }
+
+    private void addPolygons() {
+        for(Area area : route.getDriveInAreas()){
+            addPolygon(area);
+        }
+    }
+    private void addPolygon(Area area){
+        PolygonOptions options = new PolygonOptions().addAll(area.getLocationsLatLng());
+        mMap.addPolygon(options
+                .strokeWidth(1)
+                .strokeColor(Color.BLACK)
+                .fillColor(Color.BLUE));
+    }
+
+    private List<Marker> addMarkers(){
+        List<Marker> markers = new ArrayList<Marker>();
+        markers.add(addMarker(LocationUtil.toLatLng(route.getStart()), "Start", "Start of the route", BitmapDescriptorFactory.HUE_GREEN));
+        markers.add(addMarker(LocationUtil.toLatLng(route.getEnd()), "End", "End of the route", BitmapDescriptorFactory.HUE_RED));
+
+        for(Location viaPoint : route.getViaPoints()){
+            markers.add(addMarker(LocationUtil.toLatLng(viaPoint), "Via Point", "Via Point of the route", BitmapDescriptorFactory.HUE_YELLOW));
+        }
+
+        return markers;
+    }
+
     private Marker addMarker(LatLng markerLoc, String title, String poiDescription, float color){
         return mMap.addMarker(new MarkerOptions()
                 .position(markerLoc)
@@ -137,8 +160,11 @@ public class StartRouteActivity extends BaseMapActivity {
             }
         }
 
+        DriveInService.getInstance(getApplicationContext()).startMonitoring(route.getDriveInAreas());
+
         logger.e("Starting with url: %s", url);
         Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(intent);
     }
+
 }

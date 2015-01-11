@@ -28,6 +28,8 @@ public class Route implements Serializable {
 
     private List<Location> viaPoints = new ArrayList<Location>();
 
+    private List<FuelStation> fuelStations = new ArrayList<>();
+
     private List<Poi> pois = new ArrayList<>();
 
     private int distanceInMi;
@@ -36,6 +38,7 @@ public class Route implements Serializable {
     private float rating;
 
     private List<Bitmap> images = new ArrayList<Bitmap>();
+    private List<Area> driveInAreas = new ArrayList<Area>();
 
     public Route() {
     }
@@ -124,18 +127,6 @@ public class Route implements Serializable {
         this.viaPoints.add(location);
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("Route{");
-        sb.append("name='").append(name).append('\'');
-        sb.append(", description='").append(description).append('\'');
-        sb.append(", start=").append(start);
-        sb.append(", end=").append(end);
-        sb.append(", viaPoints=").append(viaPoints);
-        sb.append(", images=").append(images);
-        sb.append('}');
-        return sb.toString();
-    }
 
     public String getStartAddress() {
         return startAddress;
@@ -159,5 +150,40 @@ public class Route implements Serializable {
 
     public void setRating(float rating) {
         this.rating = rating;
+    }
+
+    public List<Area> getDriveInAreas() {
+        return driveInAreas;
+    }
+
+    public void setDriveInAreas(List<Area> driveInAreas) {
+        this.driveInAreas = driveInAreas;
+    }
+    public void addDriveInArea(Area driveInArea){
+        if( this.driveInAreas == null ){
+            this.driveInAreas = new ArrayList<Area>();
+        }
+        this.driveInAreas.add(driveInArea);
+    }
+
+    public List<FuelStation> getFuelStations() {
+        return fuelStations;
+    }
+
+    public void addFuelStation(FuelStation fuelStation){
+        this.fuelStations.add(fuelStation);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Route{");
+        sb.append("name='").append(name).append('\'');
+        sb.append(", description='").append(description).append('\'');
+        sb.append(", start=").append(start);
+        sb.append(", end=").append(end);
+        sb.append(", viaPoints=").append(viaPoints);
+        sb.append(", images=").append(images);
+        sb.append('}');
+        return sb.toString();
     }
 }

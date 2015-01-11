@@ -12,11 +12,13 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import hackthedrive.bmw.de.hackthedrive.BaseMapActivity;
 import hackthedrive.bmw.de.hackthedrive.R;
-import hackthedrive.bmw.de.hackthedrive.WelcomeActivity;
 import hackthedrive.bmw.de.hackthedrive.domain.Poi;
 import hackthedrive.bmw.de.hackthedrive.domain.Route;
 import hackthedrive.bmw.de.hackthedrive.service.RouteService;
@@ -34,8 +36,8 @@ public class RouteCreationMapActivity  extends BaseMapActivity {
 
     private static int RESULT_ADD_POI = 1;
 
-    private Button startRecordingButton;
-    private Button stopRecordingButton;
+    private ImageButton startRecordingButton;
+    private ImageButton stopRecordingButton;
     private ImageButton addPoiButton;
     private ImageButton addViaPoiButton;
 
@@ -43,13 +45,14 @@ public class RouteCreationMapActivity  extends BaseMapActivity {
     private Route route;
 
     private VehicleService vehicleService;
+    private Marker marker;
 
     @Override
     protected void onCreateMapView(Bundle savedInstanceState) {
         setContentView(R.layout.create_route_map);
         setupToolbar();
-        startRecordingButton = (Button)findViewById(R.id.startRecordingButton);
-        stopRecordingButton = (Button)findViewById(R.id.stopRecordingButton);
+        startRecordingButton = (ImageButton)findViewById(R.id.startRecordingButton);
+        stopRecordingButton = (ImageButton)findViewById(R.id.stopRecordingButton);
         addPoiButton = (ImageButton)findViewById(R.id.addPoiButton);
         addViaPoiButton = (ImageButton)findViewById(R.id.addViaPointButton);
         routeService = new RouteService();
@@ -73,6 +76,15 @@ public class RouteCreationMapActivity  extends BaseMapActivity {
     @Override
     protected void setUpMap() {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(SAN_FRAN, 15));
+        Location location = getCurrentLocation();
+        LatLng mapLocation = null;
+        if (location == null) {
+            mapLocation = SAN_FRAN;
+        } else {
+            mapLocation = new LatLng(location.getLatitude()
+                    , location.getLongitude());
+        }
+        marker = mMap.addMarker(new MarkerOptions().position(mapLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.arrow)));
     }
 
     public void onClickStartRecording(View view){
@@ -128,6 +140,7 @@ public class RouteCreationMapActivity  extends BaseMapActivity {
         Intent i = new Intent(this, SaveNewRouteActivity.class);
         i.putExtra("route", route);
         startActivity(i);
+        finish();
     }
 
     private void openModalDialog(Context context){

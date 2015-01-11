@@ -6,11 +6,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import hackthedrive.bmw.de.hackthedrive.activity.WelcomeActivity;
 
 public class MapActivity extends BaseMapActivity {
     private static final LatLng BRISBANE = new LatLng(-27.47093, 153.0235);

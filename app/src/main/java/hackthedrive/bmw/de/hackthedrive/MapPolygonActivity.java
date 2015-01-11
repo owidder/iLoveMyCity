@@ -7,17 +7,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static android.graphics.Color.BLUE;
-import static android.graphics.Color.RED;
+import hackthedrive.bmw.de.hackthedrive.activity.WelcomeActivity;
 
 public class MapPolygonActivity extends BaseMapActivity {
     private static final LatLng SYDNEY = new LatLng(-33.87365, 151.20689);

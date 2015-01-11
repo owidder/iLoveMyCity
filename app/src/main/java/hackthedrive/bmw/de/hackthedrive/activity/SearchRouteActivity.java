@@ -13,28 +13,33 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import hackthedrive.bmw.de.hackthedrive.BaseActivity;
 import hackthedrive.bmw.de.hackthedrive.R;
-import hackthedrive.bmw.de.hackthedrive.WelcomeActivity;
 import hackthedrive.bmw.de.hackthedrive.domain.Route;
 import hackthedrive.bmw.de.hackthedrive.factory.TestDataFactory;
+import hackthedrive.bmw.de.hackthedrive.service.RouteService;
 import hackthedrive.bmw.de.hackthedrive.util.GsonSerializer;
-import hackthedrive.bmw.de.hackthedrive.util.LocationUtil;
+import hackthedrive.bmw.de.hackthedrive.util.LogUtil;
 
 
 public class SearchRouteActivity extends BaseActivity {
 
+    private static final LogUtil logger = LogUtil.getLogger(SearchRouteActivity.class);
+
+    private RouteService routeService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        routeService = new RouteService();
 
         setContentView(R.layout.activity_search_route);
 
         setupToolbar();
         setupList();
+
     }
 
 
@@ -60,6 +65,15 @@ public class SearchRouteActivity extends BaseActivity {
             @Override
             protected Void doInBackground(Void... params) {
                 list = TestDataFactory.createTestRoutes(getApplicationContext());
+                try {
+                    List<Route> localRoutes = routeService.getAllRoutes();
+                    logger.d("Adding %s local routes.", localRoutes.size());
+                    for (Route route : localRoutes) {
+                        list.add(route);
+                    }
+                } catch (Exception ex){
+                    logger.e(ex,"Error loading routes: %s", ex.getMessage());
+                }
                 return null;
             }
 

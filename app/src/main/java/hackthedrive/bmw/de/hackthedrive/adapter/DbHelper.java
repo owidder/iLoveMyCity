@@ -22,7 +22,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static DbHelper singleton;
 
-    public static final String TABLE_ROUTES = "routes";
+    public static final String TABLE_ROUTES = "nav_route";
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_JSON = "json";
 
@@ -30,12 +30,11 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     // Database creation sql statement
-    private static final String DATABASE_CREATE = "create table "
-            + TABLE_ROUTES + " (" + COLUMN_ID
-            + " integer primary key autoincrement, " + COLUMN_JSON
-            + " text not null);";
+    private static final String DATABASE_CREATE = String
+            .format("create table if not exists %s ( %s integer primary key autoincrement, %s text not null) ",
+            TABLE_ROUTES, COLUMN_ID,COLUMN_JSON);
 
-    public DbHelper(Context context) {
+    protected DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -53,14 +52,11 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         logger.d("Creating all DB tables");
-        db.beginTransaction();
         try {
             db.execSQL(DATABASE_CREATE);
             logger.d("Create table: %s", DATABASE_CREATE);
         } catch (SQLException ex){
             logger.w(ex,"Database could not be created.");
-        } finally {
-            db.endTransaction();
         }
         logger.d("Finished creation of all DB tables");
     }

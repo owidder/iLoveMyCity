@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import hackthedrive.bmw.de.hackthedrive.domain.Area;
+
 public final class LocationUtil {
     private static final LogUtil logger = LogUtil.getLogger(LocationUtil.class);
 
@@ -48,6 +50,70 @@ public final class LocationUtil {
         }
 
         return loc.latitude + "," + loc.longitude;
+    }
+
+    public static double getDistanceOfLocationFromPolygon(final Location loc, final List<Location> positions) {
+
+        if (positions.size() < 2 || positions == null) {
+            return Double.MAX_VALUE;
+        }
+        double lat = loc.getLatitude() * 1E6;
+        double lon = loc.getLongitude() * 1E6;
+        double mindist = Double.MAX_VALUE;
+        boolean result = false;
+        for (int i = 0, j = positions.size() - 1; i < positions.size(); i++) {
+            double latI = positions.get(i).getLatitude() * 1E6;
+            double lonI = positions.get(i).getLongitude() * 1E6;
+            double latJ = positions.get(j).getLatitude() * 1E6;
+            double lonJ = positions.get(j).getLongitude() * 1E6;
+
+            if ((lonI < lon && lonJ >= lon || lonJ < lon && lonI >= lon)
+                    && latI + (lon - lonI) / (lonJ - lonI) * (latJ - latI) < lat) {
+                result = !result;
+            }
+
+            // additionally calculate distance of location to current line
+            final double dist = getDistanceOfLocationFromLine(loc, latI, lonI, latJ, lonJ);
+            if (dist < mindist) {
+                mindist = dist;
+            }
+
+            // move to next line
+            j = i;
+        }
+        // an even number of intersections means inside of polygon => distance is negative
+        double distance = mindist * 60D * 1852D;
+        return result ? -1D * distance : distance;
+    }
+
+    private static double getDistanceOfLocationFromLine(final Location loc, double lat1, double lon1, double lat2,
+                                                        double lon2) {
+        final double locLat = loc.getLatitude() * 1E6;
+        final double locLon = loc.getLongitude() * 1E6;
+
+        final double xDelta = lat2 - lat1;
+        final double yDelta = lon2 - lon1;
+        final double u = ((locLat - lat1) * xDelta + (locLon - lon1) * yDelta) / (xDelta * xDelta + yDelta * yDelta);
+        final double distx;
+        final double disty;
+        if (u < 0) {
+            distx = lat1 - locLat;
+            disty = lon1 - locLon;
+        }
+        else if (u > 1) {
+            distx = lat2 - locLat;
+            disty = lon2 - locLon;
+        }
+        else {
+            distx = lat1 + u * xDelta - locLat;
+            disty = lon1 + u * yDelta - locLon;
+        }
+        final double dist = Math.sqrt(distx * distx + disty * disty);
+        return dist / 1E6;
+    }
+
+    public static boolean isInArea(final Location loc, final Area area) {
+        return getDistanceOfLocationFromPolygon(loc, area.getLocations()) < 1D;
     }
 
 }

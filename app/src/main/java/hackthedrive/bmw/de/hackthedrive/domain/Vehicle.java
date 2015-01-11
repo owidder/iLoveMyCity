@@ -8,6 +8,25 @@ public class Vehicle {
     private Double lng;
     private Double heading;
 
+    public Double getBatteryLevel() {
+        return batteryLevel;
+    }
+
+    public void setBatteryLevel(Double batteryLevel) {
+        this.batteryLevel = batteryLevel;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    private Double batteryLevel;
+    private int speed;
+
     public Double getLat() {
         return lat;
     }

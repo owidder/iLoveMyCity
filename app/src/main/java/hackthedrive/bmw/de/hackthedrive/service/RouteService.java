@@ -2,6 +2,8 @@ package hackthedrive.bmw.de.hackthedrive.service;
 
 import android.location.Location;
 
+import java.util.List;
+
 import hackthedrive.bmw.de.hackthedrive.adapter.DbHelper;
 import hackthedrive.bmw.de.hackthedrive.adapter.RouteDataSource;
 import hackthedrive.bmw.de.hackthedrive.domain.Route;
@@ -16,7 +18,10 @@ public class RouteService {
 
     private static final LogUtil logger = LogUtil.getLogger();
 
+    private RouteDataSource routeDs;
+
     public RouteService(){
+        routeDs = new RouteDataSource();
     }
 
     public Route createNewRoute(Location startingPoint){
@@ -25,9 +30,13 @@ public class RouteService {
         return route;
     }
 
-    // public void saveRoute(Route route){
-      //  db.save(route);
-    //}
+    public void save(Route route){
+        routeDs.save(route);
+    }
+
+    public List<Route> getAllRoutes(){
+        return routeDs.getAllRoutes();
+    }
 
     public void saveRouteRest(Route route){
         RestClient client = new RestClient("http://172.16.1.110:8080/rest/route/new");

@@ -149,10 +149,10 @@ public class RestClient {
 
         } catch (ClientProtocolException e) {
             client.getConnectionManager().shutdown();
-            logger.e(e, "Error");
+            logger.e(e, "Error: %s", e.getMessage());
         } catch (IOException e) {
             client.getConnectionManager().shutdown();
-            logger.e(e, "Error");
+            logger.e(e, "Error: %s", e.getMessage());
         }
     }
 
@@ -166,12 +166,12 @@ public class RestClient {
                 sb.append(line + "\n");
             }
         } catch (IOException e) {
-            logger.e(e, "Error");
+            logger.e(e, "Error: %s", e.getMessage());
         } finally {
             try {
                 is.close();
             } catch (IOException e) {
-                logger.e(e, "Error");
+                logger.e(e, "Error: %s", e.getMessage());
             }
         }
         return sb.toString();

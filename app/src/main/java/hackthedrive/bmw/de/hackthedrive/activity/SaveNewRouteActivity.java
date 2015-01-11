@@ -12,9 +12,8 @@ import android.widget.EditText;
 
 import hackthedrive.bmw.de.hackthedrive.BaseActivity;
 import hackthedrive.bmw.de.hackthedrive.R;
-import hackthedrive.bmw.de.hackthedrive.WelcomeActivity;
-import hackthedrive.bmw.de.hackthedrive.adapter.RouteDataSource;
 import hackthedrive.bmw.de.hackthedrive.domain.Route;
+import hackthedrive.bmw.de.hackthedrive.service.RouteService;
 import hackthedrive.bmw.de.hackthedrive.util.LogUtil;
 
 /**
@@ -25,7 +24,7 @@ public class SaveNewRouteActivity extends BaseActivity {
     LogUtil log = LogUtil.getLogger();
 
     private Route route;
-    private RouteDataSource dataSource;
+    private RouteService routeService;
 
     private static int RESULT_LOAD_IMAGE = 1;
     Uri myPicture = null;
@@ -36,21 +35,18 @@ public class SaveNewRouteActivity extends BaseActivity {
         setContentView(R.layout.activity_save_new_route);
         Bundle b = getIntent().getExtras();
         route = (Route) b.getSerializable("route");
-        dataSource = new RouteDataSource(this);
-        dataSource.open();
+        routeService = new RouteService();
 
         setupToolbar();
     }
 
     @Override
     protected void onResume() {
-        dataSource.open();
         super.onResume();
     }
 
     @Override
     protected void onPause() {
-        dataSource.close();
         super.onPause();
     }
 
@@ -73,7 +69,7 @@ public class SaveNewRouteActivity extends BaseActivity {
         EditText descField = (EditText)findViewById(R.id.editTextDescr);
         route.setName(nameField.getText().toString());
         route.setDescription(descField.getText().toString());
-        dataSource.save(route);
+        routeService.save(route);
 
         log.d("Save new route: %s", route.toString());
         finish();

@@ -22,7 +22,7 @@
         android:orientation="vertical"
         android:gravity="center_horizontal">
 
-        <Button
+        <ImageButton
             android:id="@+id/startRecordingButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,9 +32,11 @@
             android:onClick="onClickStartRecording"
             android:textColor="#000"
             android:textSize="20sp"
-            android:layout_alignParentLeft="true"/>
+            android:layout_alignParentLeft="true"
+            android:background="@null"
+            android:src="@drawable/record100"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/stopRecordingButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,25 +46,29 @@
             android:onClick="onClickStopRecording"
             android:text="Stop Recording"
             android:textColor="#000"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:background="@null"
+            android:src="@drawable/stop100"/>
 
         <ImageButton
             android:id="@+id/addPoiButton"
+            android:layout_margin="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="invisible"
             android:onClick="onClickAddPoi"
             android:background="@null"
-            android:src="@drawable/addpoi150"/>
+            android:src="@drawable/addpoi100"/>
 
         <ImageButton
             android:id="@+id/addViaPointButton"
+            android:layout_margin="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="invisible"
             android:onClick="onClickAddViaPoint"
             android:background="@null"
-            android:src="@drawable/addvia150"/>
+            android:src="@drawable/addvia100"/>
 
     </LinearLayout>
     </fragment>

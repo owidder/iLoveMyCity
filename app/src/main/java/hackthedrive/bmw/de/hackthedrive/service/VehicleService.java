@@ -34,21 +34,27 @@ public class VehicleService {
         client.Execute(RestClient.RequestMethod.GET);
         String response = client.getResponse();
 
-        JSONObject jsonObject = new JSONObject(response);
+        if(response != null && response.length() > 0) {
+            JSONObject jsonObject = new JSONObject(response);
 
-        return jsonObject;
+            return jsonObject;
+        } else {
+            return null;
+        }
     }
 
     public Location getCurrentLocation(){
         try {
             JSONObject serviceData = getServiceData();
 
-            JSONObject location = serviceData.getJSONArray("Data").getJSONObject(0).getJSONObject("Location");
+            if(serviceData != null) {
+                JSONObject location = serviceData.getJSONArray("Data").getJSONObject(0).getJSONObject("Location");
 
-            Double lat = location.getDouble("Lat");
-            Double lon = location.getDouble("Lng");
+                Double lat = location.getDouble("Lat");
+                Double lon = location.getDouble("Lng");
 
-            return LocationUtil.createLocation(lat, lon);
+                return LocationUtil.createLocation(lat, lon);
+            }
         } catch (Exception e) {
            logger.e(e, "Problem with rest call. %s", e.getMessage());
         }
@@ -62,25 +68,31 @@ public class VehicleService {
         try {
             JSONObject serviceData = getServiceData();
 
-            JSONObject data = serviceData.getJSONArray("Data").getJSONObject(0);
-            if( data == null ){
-                return null;
+            if(serviceData != null) {
+                JSONObject data = serviceData.getJSONArray("Data").getJSONObject(0);
+                if (data == null) {
+                    return null;
+                }
+
+                JSONObject location = data.getJSONObject("LastLocation");
+                if (location == null) {
+                    return null;
+                }
+
+                Double lat = location.getDouble("Lat");
+                Double lng = location.getDouble("Lng");
+
+                Double heading = data.getDouble("LastHeading");
+                Double batteryLevel = data.getDouble("LastBatteryLevel");
+                Integer speed = data.getInt("LastSpeed");
+
+                vehicle = new Vehicle();
+                vehicle.setLat(lat);
+                vehicle.setLng(lng);
+                vehicle.setHeading(heading);
+                vehicle.setBatteryLevel(batteryLevel);
+                vehicle.setSpeed(speed);
             }
-
-            JSONObject location = data.getJSONObject("LastLocation");
-            if( location == null ){
-                return null;
-            }
-
-            Double lat = location.getDouble("Lat");
-            Double lng = location.getDouble("Lng");
-
-            Double heading = data.getDouble("LastHeading");
-
-            vehicle = new Vehicle();
-            vehicle.setLat(lat);
-            vehicle.setLng(lng);
-            vehicle.setHeading(heading);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -18,6 +18,9 @@ public class LocationMockService {
 
     private static LocationMockService instance;
     private VehicleServiceAsyncWrapper vehicleServiceAsyncWrapper;
+    private Vehicle lastVehicle = null;
+    private Double startBatteryLevel = null;
+    private Double currentBatteryDrain = 0.0;
     private Location lastLoc = null;
     private final LocationManager lm;
 
@@ -42,6 +45,14 @@ public class LocationMockService {
                 pushLocation(data);
             }
         });
+
+        vehicleServiceAsyncWrapper.addListener(new VehicleServiceAsyncWrapper.VehicleDataListener() {
+
+            @Override
+            public void onVehicleDataChanged(Vehicle data) {
+                computeBatteryDrain(data);
+            }
+        });
     }
 
     private void pushLocation(Vehicle data){
@@ -59,6 +70,16 @@ public class LocationMockService {
         pushLocation(loc);
     }
 
+    private void computeBatteryDrain(Vehicle data) {
+        if(lastVehicle == null) {
+            lastVehicle = data;
+            startBatteryLevel = data.getBatteryLevel();
+        }
+        else {
+            currentBatteryDrain = startBatteryLevel - data.getBatteryLevel();
+        }
+    }
+
     public void pushLocation(Location loc){
         makeLocationComplete(loc);
 
@@ -67,7 +88,7 @@ public class LocationMockService {
         }
         else{
             if( lastLoc.getLatitude() == loc.getLatitude() && lastLoc.getLongitude() == loc.getLongitude()){
-                logger.d("Location did not change: %s", loc);
+                //logger.d("Location did not change: %s", loc);
                 return;
             }
         }

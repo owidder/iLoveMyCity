@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import hackthedrive.bmw.de.hackthedrive.activity.RouteCreationMapActivity;
 import hackthedrive.bmw.de.hackthedrive.activity.SearchRouteActivity;
 import hackthedrive.bmw.de.hackthedrive.activity.StartRouteActivity;
+import hackthedrive.bmw.de.hackthedrive.activity.WelcomeActivity;
 
 
 public class ListActivity extends BaseActivity {
@@ -54,6 +55,8 @@ public class ListActivity extends BaseActivity {
         list.add(new ListItem("Start Route", "", R.drawable.car, StartRouteActivity.class));
         list.add(new ListItem("Search Route", "", R.drawable.lupe, SearchRouteActivity.class));
         list.add(new ListItem("Create Route", "", R.drawable.pointer, RouteCreationMapActivity.class));
+
+        /**
         list.add(new ListItem("Welcome", "Welcome example", R.drawable.exclamtion, WelcomeActivity.class));
         list.add(new ListItem("Menu", "Menu example", R.drawable.exclamtion, MenuActivity.class));
         list.add(new ListItem("Panels", "Panels example", R.drawable.exclamtion, PanelsActivity.class));
@@ -62,7 +65,7 @@ public class ListActivity extends BaseActivity {
         list.add(new ListItem("Map Polygon", "Map-Activity with a polygon", R.drawable.exclamtion, MapPolygonActivity.class));
         list.add(new ListItem("Map Colored Polyline", "Map-Activity with colored polyline", R.drawable.exclamtion, MapPolylineActivity.class));
         list.add(new ListItem("Map Heatmap", "Map-...", R.drawable.exclamtion, MapHeatmapActivity.class));
-
+        */
         final ListItemArrayAdapter adapter = new ListItemArrayAdapter(this, list);
         listview.setAdapter(adapter);
 
