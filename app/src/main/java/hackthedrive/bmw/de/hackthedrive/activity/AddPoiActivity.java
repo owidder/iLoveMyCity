@@ -8,12 +8,11 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.SeekBar;
 
 import hackthedrive.bmw.de.hackthedrive.BaseActivity;
 import hackthedrive.bmw.de.hackthedrive.R;
 import hackthedrive.bmw.de.hackthedrive.domain.Poi;
-import hackthedrive.bmw.de.hackthedrive.domain.Route;
-import hackthedrive.bmw.de.hackthedrive.service.RouteService;
 import hackthedrive.bmw.de.hackthedrive.service.VehicleService;
 import hackthedrive.bmw.de.hackthedrive.util.LogUtil;
 
@@ -22,9 +21,9 @@ import hackthedrive.bmw.de.hackthedrive.util.LogUtil;
  */
 public class AddPoiActivity extends BaseActivity {
 
-    private Poi poi;
+    private static final LogUtil logger = LogUtil.getLogger(AddPoiActivity.class);
 
-    LogUtil log = LogUtil.getLogger();
+    private Poi poi;
 
     private static int RESULT_LOAD_IMAGE = 1;
 
@@ -32,6 +31,7 @@ public class AddPoiActivity extends BaseActivity {
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.activity_add_new_poi);
+        poi = new Poi();
     }
 
     public void onClickSave(View v){
@@ -49,11 +49,15 @@ public class AddPoiActivity extends BaseActivity {
     }
 
     private void fillPoi(){
-        poi = new Poi();
         EditText nameField = (EditText)findViewById(R.id.editTextName);
         EditText descField = (EditText)findViewById(R.id.editTextDescr);
         poi.setName(nameField.getText().toString());
         poi.setDesc(descField.getText().toString());
+
+        SeekBar rangeBar = (SeekBar)findViewById(R.id.rangeBar);
+        logger.d("Range: %s", rangeBar.getProgress());
+
+        poi.setRadius(rangeBar.getProgress());
 
         VehicleService vehicleService = new VehicleService(getApplication());
         poi.setLocation(vehicleService.getCurrentLocation());
@@ -82,7 +86,7 @@ public class AddPoiActivity extends BaseActivity {
 
             //ImageView imageView = (ImageView) findViewById(R.id.imageView1);
             //imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-            log.d("Adding image to route: %s", picturePath.toString());
+            logger.d("Adding image to route: %s", picturePath.toString());
             poi.addImage(BitmapFactory.decodeFile(picturePath));
         }
     }

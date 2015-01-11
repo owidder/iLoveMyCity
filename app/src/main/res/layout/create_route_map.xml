@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:background="#e5e5e5"
     android:orientation="vertical"
+    android:gravity="center_horizontal"
     tools:context="hackthedrive.bmw.de.hackthedrive.MapActivity">
 
     <include layout="@layout/toolbar_actionbar_with_headerbar" />
@@ -15,66 +16,12 @@
         android:id="@+id/map" tools:context=".MapsActivity"
         android:name="com.google.android.gms.maps.SupportMapFragment" >
 
-    <!--
-        <RadioGroup
-            android:id="@+id/radio_group_list_selector"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal"
-            android:background="#80000000"
-            android:padding="4dp" >
-
-            <RadioButton
-                android:id="@+id/radioPopular"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:text="Start"
-                android:gravity="center_horizontal|center_vertical"
-                android:layout_weight="1" />
-                />
-            <View
-                android:layout_width="1dip"
-                android:layout_height="match_parent"
-                android:background="#aaa" />
-
-            <RadioButton
-                android:id="@+id/radioAZ"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal|center_vertical"
-                android:text="Stop"
-                android:layout_weight="1" />
-
-            <View
-                android:layout_width="1dip"
-                android:layout_height="match_parent"
-                android:background="#aaa" />
-
-            <RadioButton
-                android:id="@+id/radioCategory"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal|center_vertical"
-                android:text="Add"
-                android:layout_weight="1" />
-            <View
-                android:layout_width="1dip"
-                android:layout_height="match_parent"
-                android:background="#aaa" />
-
-            <RadioButton
-                android:id="@+id/radioNearBy"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal|center_vertical"
-                android:text="addNavPoi"
-                android:layout_weight="1"/>
-        </RadioGroup>-->
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
         <Button
             android:id="@+id/startRecordingButton"
             android:layout_width="wrap_content"
@@ -101,28 +48,22 @@
 
         <ImageButton
             android:id="@+id/addPoiButton"
-            android:layout_width="50dp"
-            android:layout_height="100dp"
-            android:layout_margin="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:visibility="invisible"
-            android:text="Add POI"
             android:onClick="onClickAddPoi"
-            android:layout_below="@+id/stopRecordingButton"
-            android:textColor="#000"
-            android:textSize="20sp"
             android:background="@null"
-            android:src="@drawable/liberty"/>
+            android:src="@drawable/addpoi150"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/addViaPointButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
             android:visibility="invisible"
-            android:layout_below="@+id/addPoiButton"
-            android:text="Add Via Point"
-            android:textColor="#000"
-            android:textSize="20sp" />
-    </RelativeLayout>
+            android:onClick="onClickAddViaPoint"
+            android:background="@null"
+            android:src="@drawable/addvia150"/>
+
+    </LinearLayout>
     </fragment>
 </LinearLayout>

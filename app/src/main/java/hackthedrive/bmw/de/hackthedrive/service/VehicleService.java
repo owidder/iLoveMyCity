@@ -62,14 +62,25 @@ public class VehicleService {
         try {
             JSONObject serviceData = getServiceData();
 
-            JSONObject location = serviceData.getJSONArray("Data").getJSONObject(0).getJSONObject("Location");
+            JSONObject data = serviceData.getJSONArray("Data").getJSONObject(0);
+            if( data == null ){
+                return null;
+            }
+
+            JSONObject location = data.getJSONObject("LastLocation");
+            if( location == null ){
+                return null;
+            }
 
             Double lat = location.getDouble("Lat");
             Double lng = location.getDouble("Lng");
 
+            Double heading = data.getDouble("LastHeading");
+
             vehicle = new Vehicle();
             vehicle.setLat(lat);
             vehicle.setLng(lng);
+            vehicle.setHeading(heading);
         } catch (Exception e) {
             e.printStackTrace();
         }

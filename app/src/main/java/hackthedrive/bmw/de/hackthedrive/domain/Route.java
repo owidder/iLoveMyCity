@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.media.Image;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.List;
  * Created by dst on 10.01.2015.
  */
 public class Route implements Serializable {
+
+    private Long id;
 
     private String name;
     private String description;
@@ -106,6 +110,18 @@ public class Route implements Serializable {
 
     public void addPoi(Poi poi){
         this.pois.add(poi);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void addViaPoint(Location location){
+        this.viaPoints.add(location);
     }
 
     @Override

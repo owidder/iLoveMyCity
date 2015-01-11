@@ -20,6 +20,8 @@ import hackthedrive.bmw.de.hackthedrive.BaseActivity;
 import hackthedrive.bmw.de.hackthedrive.R;
 import hackthedrive.bmw.de.hackthedrive.WelcomeActivity;
 import hackthedrive.bmw.de.hackthedrive.domain.Route;
+import hackthedrive.bmw.de.hackthedrive.factory.TestDataFactory;
+import hackthedrive.bmw.de.hackthedrive.util.GsonSerializer;
 import hackthedrive.bmw.de.hackthedrive.util.LocationUtil;
 
 
@@ -57,7 +59,7 @@ public class SearchRouteActivity extends BaseActivity {
 
             @Override
             protected Void doInBackground(Void... params) {
-                list = createTestRoutes();
+                list = TestDataFactory.createTestRoutes(getApplicationContext());
                 return null;
             }
 
@@ -74,40 +76,13 @@ public class SearchRouteActivity extends BaseActivity {
                     public void onItemClick(AdapterView<?> parent, final View view,
                                             int position, long id) {
                         final Route item = (Route) parent.getItemAtPosition(position);
-                        //Intent intent = new Intent(getApplicationContext(), item.getActivityToStart());
-                        //startActivity(intent);
+                        Intent intent = new Intent(getApplicationContext(), StartRouteActivity.class);
+                        intent.putExtra(ROUTE_INTENT_EXTRA, GsonSerializer.serialize(item));
+                        startActivity(intent);
                     }
                 });
             }
         }.execute();
-    }
-
-    private List<Route> createTestRoutes(){
-        List<Route> result = new ArrayList<Route>();
-
-        Route route = new Route();
-        route.setName("Test Route");
-        route.setCostInDollar(30);
-        route.setDistanceInMi(39);
-        route.setStart(LocationUtil.createLocation(37.778845, -122.414722));
-        route.setEnd(LocationUtil.createLocation(37.779795, -122.407201));
-        route.setStartAddress(LocationUtil.geocodeLocation(this, route.getStart()));
-        route.setEndAddress(LocationUtil.geocodeLocation(this, route.getEnd()));
-        route.setRating(4.9f);
-        result.add(route);
-
-        Route route2 = new Route();
-        route2.setName("Test Route #2");
-        route2.setCostInDollar(30);
-        route2.setDistanceInMi(39);
-        route2.setStart(LocationUtil.createLocation(37.778845, -122.414722));
-        route2.setEnd(LocationUtil.createLocation(37.779795, -122.407201));
-        route2.setStartAddress(LocationUtil.geocodeLocation(this, route2.getStart()));
-        route2.setEndAddress(LocationUtil.geocodeLocation(this, route2.getEnd()));
-        route2.setRating(4.3f);
-        result.add(route2);
-
-        return result;
     }
 
     public class RouteArrayAdapter extends ArrayAdapter<Route> {

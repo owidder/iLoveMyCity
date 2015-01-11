@@ -5,6 +5,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 
 public abstract class BaseActivity extends ActionBarActivity {
+    public static final String ROUTE_INTENT_EXTRA = "ROUTE";
+
     private Toolbar mActionBarToolbar;
 
     protected Toolbar getActionBarToolbar() {

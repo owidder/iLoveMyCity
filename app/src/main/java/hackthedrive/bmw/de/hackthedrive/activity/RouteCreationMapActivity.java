@@ -37,7 +37,7 @@ public class RouteCreationMapActivity  extends BaseMapActivity {
     private Button startRecordingButton;
     private Button stopRecordingButton;
     private ImageButton addPoiButton;
-    private Button addViaPoiButton;
+    private ImageButton addViaPoiButton;
 
     private RouteService routeService;
     private Route route;
@@ -51,7 +51,7 @@ public class RouteCreationMapActivity  extends BaseMapActivity {
         startRecordingButton = (Button)findViewById(R.id.startRecordingButton);
         stopRecordingButton = (Button)findViewById(R.id.stopRecordingButton);
         addPoiButton = (ImageButton)findViewById(R.id.addPoiButton);
-        addViaPoiButton = (Button)findViewById(R.id.addViaPointButton);
+        addViaPoiButton = (ImageButton)findViewById(R.id.addViaPointButton);
         routeService = new RouteService();
         vehicleService = new VehicleService(getApplication());
     }
@@ -72,7 +72,7 @@ public class RouteCreationMapActivity  extends BaseMapActivity {
 
     @Override
     protected void setUpMap() {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(SAN_FRAN, 10));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(SAN_FRAN, 15));
     }
 
     public void onClickStartRecording(View view){
@@ -92,7 +92,7 @@ public class RouteCreationMapActivity  extends BaseMapActivity {
 
         if (requestCode == 1) {
             if(resultCode == RESULT_OK){
-                Poi result= (Poi)data.getSerializableExtra("result");
+                Poi result= (Poi)data.getSerializableExtra("poi");
                 logger.d("Adding new poi: %s", result);
                 route.addPoi(result);
             }
@@ -101,6 +101,10 @@ public class RouteCreationMapActivity  extends BaseMapActivity {
             }
         }
     }//onActivityResult
+
+    public void onClickAddViaPoint(View v){
+        route.addViaPoint(getCurrentLocation());
+    }
 
     public void onClickAddPoi(View v){
         Intent i = new Intent(this, AddPoiActivity.class);

@@ -4,6 +4,9 @@ package hackthedrive.bmw.de.hackthedrive.domain;
  * Created by oliverwidder on 10/01/15.
  */
 public class Vehicle {
+    private Double lat;
+    private Double lng;
+    private Double heading;
 
     public Double getLat() {
         return lat;
@@ -13,8 +16,6 @@ public class Vehicle {
         this.lat = lat;
     }
 
-    private Double lat;
-
     public Double getLng() {
         return lng;
     }
@@ -23,5 +24,11 @@ public class Vehicle {
         this.lng = lng;
     }
 
-    private Double lng;
+    public Double getHeading() {
+        return heading;
+    }
+
+    public void setHeading(Double heading) {
+        this.heading = heading;
+    }
 }

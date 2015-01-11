@@ -10,8 +10,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -21,6 +24,9 @@ import hackthedrive.bmw.de.hackthedrive.BaseMapActivity;
 import hackthedrive.bmw.de.hackthedrive.R;
 import hackthedrive.bmw.de.hackthedrive.WelcomeActivity;
 import hackthedrive.bmw.de.hackthedrive.domain.Route;
+import hackthedrive.bmw.de.hackthedrive.factory.TestDataFactory;
+import hackthedrive.bmw.de.hackthedrive.service.LocationMockService;
+import hackthedrive.bmw.de.hackthedrive.util.GsonDeserializer;
 import hackthedrive.bmw.de.hackthedrive.util.LocationUtil;
 import hackthedrive.bmw.de.hackthedrive.util.LogUtil;
 
@@ -38,7 +44,13 @@ public class StartRouteActivity extends BaseMapActivity {
     protected void onCreateMapView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_start_route);
 
-        route = createTestRoute();
+        if( !getIntent().hasExtra(ROUTE_INTENT_EXTRA) ){
+            route = TestDataFactory.createTestRoute1(getApplicationContext(), false);
+        }else{
+            String routeStr = getIntent().getStringExtra(ROUTE_INTENT_EXTRA);
+            logger.d("Received route: %s", routeStr);
+            route = GsonDeserializer.deserialize(routeStr, Route.class);
+        }
 
         txtPoiCount = (TextView)findViewById(R.id.txtPoiCount);
         txtPoiCount.setText(String.valueOf(route.getViaPoints().size() + 2));
@@ -76,17 +88,32 @@ public class StartRouteActivity extends BaseMapActivity {
 
     @Override
     protected void setUpMap() {
+        List<Marker> markers = new ArrayList<Marker>();
+
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LocationUtil.toLatLng(route.getStart()), 15));
 
-        addMarker(LocationUtil.toLatLng(route.getStart()), "Start", "Start of the route", BitmapDescriptorFactory.HUE_GREEN);
-        addMarker(LocationUtil.toLatLng(route.getEnd()), "End", "End of the route", BitmapDescriptorFactory.HUE_RED);
+        LocationMockService.getInstance(this).pushLocation(route.getStart());
+
+        markers.add(addMarker(LocationUtil.toLatLng(route.getStart()), "Start", "Start of the route", BitmapDescriptorFactory.HUE_GREEN));
+        markers.add(addMarker(LocationUtil.toLatLng(route.getEnd()), "End", "End of the route", BitmapDescriptorFactory.HUE_RED));
 
         for(Location viaPoint : route.getViaPoints()){
-            addMarker(LocationUtil.toLatLng(viaPoint), "Via Point", "Via Point of the route", BitmapDescriptorFactory.HUE_YELLOW);
+            markers.add(addMarker(LocationUtil.toLatLng(viaPoint), "Via Point", "Via Point of the route", BitmapDescriptorFactory.HUE_YELLOW));
         }
+
+        final LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for (Marker marker : markers) {
+            builder.include(marker.getPosition());
+        }
+        mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 30));
+            }
+        });
     }
-    private void addMarker(LatLng markerLoc, String title, String poiDescription, float color){
-        mMap.addMarker(new MarkerOptions()
+    private Marker addMarker(LatLng markerLoc, String title, String poiDescription, float color){
+        return mMap.addMarker(new MarkerOptions()
                 .position(markerLoc)
                 .title(title)
                 .snippet(poiDescription)
@@ -94,7 +121,8 @@ public class StartRouteActivity extends BaseMapActivity {
     }
 
     private void startNavigation(){
-        String url = "https://www.google.com/maps/dir/Current+Location/";
+        //String url = "https://www.google.com/maps/dir/Current+Location/";
+        String url = "https://www.google.com/maps/dir/";
         url += route.getStart().getLatitude()+","+route.getStart().getLongitude() + "/";
         url += route.getEnd().getLatitude()+","+route.getEnd().getLongitude();
 
@@ -113,26 +141,4 @@ public class StartRouteActivity extends BaseMapActivity {
         Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(intent);
     }
-
-    private Route createTestRoute() {
-        Route route = new Route();
-        route.setName("Test Route");
-
-        route.setCostInDollar(30);
-        route.setDistanceInMi(39);
-
-        route.setStart(LocationUtil.createLocation(37.778845, -122.414722));
-        route.setEnd(LocationUtil.createLocation(37.779795, -122.407201));
-
-
-        List<Location> viaPoints = new ArrayList<Location>();
-        viaPoints.add(LocationUtil.createLocation(37.778794, -122.410495));
-        viaPoints.add(LocationUtil.createLocation(37.783254, -122.402706));
-
-        route.setViaPoints(viaPoints);
-
-        return route;
-
-    }
-
 }
