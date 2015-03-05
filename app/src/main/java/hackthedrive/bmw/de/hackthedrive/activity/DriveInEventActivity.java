@@ -1,6 +1,8 @@
 package hackthedrive.bmw.de.hackthedrive.activity;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -8,6 +10,8 @@ import android.widget.TextView;
 import hackthedrive.bmw.de.hackthedrive.BaseActivity;
 import hackthedrive.bmw.de.hackthedrive.R;
 import hackthedrive.bmw.de.hackthedrive.domain.Area;
+import hackthedrive.bmw.de.hackthedrive.service.ActiveRouteService;
+import hackthedrive.bmw.de.hackthedrive.service.DriveInService;
 import hackthedrive.bmw.de.hackthedrive.service.VehicleService;
 import hackthedrive.bmw.de.hackthedrive.util.GsonDeserializer;
 import hackthedrive.bmw.de.hackthedrive.util.LogUtil;

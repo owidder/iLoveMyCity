@@ -31,6 +31,15 @@ public class WelcomeActivity extends BaseActivity {
             }
         });
 
+        findViewById(R.id.create_from_poi).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(WelcomeActivity.this, SearchPoiActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
         findViewById(R.id.use_existing).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

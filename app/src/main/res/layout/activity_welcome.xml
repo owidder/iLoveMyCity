@@ -12,6 +12,14 @@
         android:layout_weight="1"
         android:background="#e5e5e5">
 
+        <ImageButton
+            android:id="@+id/create_via_pois"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:src="@drawable/gear48"
+            android:layout_gravity="right|top" />
+
         <!-- Logo -->
         <ImageView
             android:src="@drawable/ilmc"
@@ -124,6 +132,20 @@
             android:textColor="#fff" />
 
         <Button
+            android:id="@+id/create_from_poi"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackground"
+            android:text="Create from POIs"
+            android:textSize="@dimen/text_size_medium"
+            android:textStyle="@integer/font_textStyle_medium"
+            android:fontFamily="@string/font_fontFamily_medium"
+            android:textAllCaps="true"
+            android:textColor="#fff" />
+
+<!--
+        <Button
             android:id="@+id/create_via_pois"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -134,6 +156,7 @@
             android:fontFamily="@string/font_fontFamily_medium"
             android:textAllCaps="true"
             android:textColor="#fff" />
+-->
 
     </LinearLayout>
 
